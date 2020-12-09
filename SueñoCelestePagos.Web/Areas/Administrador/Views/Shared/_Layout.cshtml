@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sueño Celeste | Sistema Administrador</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="images/icons/favicon.ico">
+    <link rel="apple-touch-icon" href="images/icons/favicon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/icons/favicon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/icons/favicon-114x114.png">
+    <!--Loading bootstrap css-->
+    <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,700">
+    <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Oswald:400,700,300">
+    <link type="text/css" rel="stylesheet" href="~/Areas/Administrador/Content/styles/jquery-ui-1.10.4.custom.min.css">
+    <link type="text/css" rel="stylesheet" href="~/Areas/Administrador/Content/styles/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="~/Areas/Administrador/Content/styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="~/Areas/Administrador/Content/styles/animate.css">
+    <link type="text/css" rel="stylesheet" href="~/Areas/Administrador/Content/styles/all.css">
+    <link type="text/css" rel="stylesheet" href="~/Areas/Administrador/Content/styles/main.css">
+    <link type="text/css" rel="stylesheet" href="~/Areas/Administrador/Content/styles/style-responsive.css">
+    <link type="text/css" rel="stylesheet" href="~/Content/styles/Odontograma.css" />
+</head>
+<body>
+    <div>
+        <!--BEGIN TOPBAR-->
+        <div id="header-topbar-option-demo" class="page-header-topbar">
+            <div id="topbar" role="navigation" style="margin-bottom: 0;" data-step="3" class="navbar navbar-default navbar-static-top">
+                <div class="navbar-header">
+                    <a id="logo" href="" class="navbar-brand">
+                        <span class="fa fa-rocket"></span>
+                        <span class="logo-text">SysAdmin</span>
+                        <span style="display: none" class="logo-text-icon">µ</span>
+                    </a>
+                    @*<a id="logo" href=""><img src="~/Areas/Administrador/Content/images/"></a>*@
+                </div>
+                <div class="topbar-main">
+                    <a id="menu-toggle" href="#" class="hidden-xs"><i class="fa fa-bars"></i></a>
+
+                    <div class="news-update-box hidden-xs">
+                        <ul id="news-update" class="ticker list-unstyled">
+                            <li></li>
+                        </ul>
+                    </div>
+                    <ul class="nav navbar navbar-top-links navbar-right mbn">
+                        <li>
+                            <br />
+                            Usuario Logueado:
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+
+        <div id="wrapper">
+            <!--BEGIN SIDEBAR MENU-->
+            <nav id="sidebar" role="navigation" data-step="2" data-position="right" class="navbar-default navbar-static-side">
+                <div class="sidebar-collapse menu-scroll">
+                    <ul id="side-menu" class="nav">
+                        <div class="clearfix"></div>
+                        <li class="active">
+                            <a href="">
+                                <i class="fa fa-tachometer fa-fw"></i>
+                                <span class="menu-title">MENÚ</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Action("Index","Home")">
+                                <i class="fa fa-home"></i>
+                                <span class="menu-title">HOME</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Action("Index","Compras")">
+                                <i class="fa fa-group"></i>
+                                <span class="menu-title">COMPRAS</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Action("VentasACancelar","Compras")">
+                                <i class="fa fa-group"></i>
+                                <span class="menu-title">CANCELAR COMPRAS</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Action("Index","Clientes")">
+                                <i class="fa fa-group"></i>
+                                <span class="menu-title">CLIENTES</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Action("Index","FechasDeVencimientos")">
+                                <i class="fa fa-group"></i>
+                                <span class="menu-title">COMPRAS</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            @using (Html.BeginForm("LogOff", "Account", new { Area = "" }, FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                            {
+                                @Html.AntiForgeryToken()
+                            }
+                            <a href="javascript:document.getElementById('logoutForm').submit()">
+                                <i class="fa fa-power-off"></i>
+                                <span class="menu-title">CERRAR SESIÓN</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!--END SIDEBAR MENU-->
+            <!--BEGIN PAGE WRAPPER-->
+            <div id="page-wrapper">
+                <!--BEGIN CONTENT-->
+                @RenderBody()
+                <!--END CONTENT-->
+                <!--BEGIN FOOTER-->
+                <div id="footer">
+                    <div class="copyright">
+                        <a href="">2020 ©</a>
+                    </div>
+                </div>
+                <!--END FOOTER-->
+            </div>
+            <!--END PAGE WRAPPER-->
+        </div>
+    </div>
+
+    @*@Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)*@
+    @*<script src="~/Areas/Administrador/Content/script/jquery-1.10.2.min.js"></script>*@
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Areas/Administrador/Content/script/jquery-migrate-1.2.1.min.js"></script>
+    <script src="~/Areas/Administrador/Content/script/jquery-ui.js"></script>
+    <script src="~/Areas/Administrador/Content/script/bootstrap.min.js"></script>
+    <script src="~/Areas/Administrador/Content/script/bootstrap-hover-dropdown.js"></script>
+    <script src="~/Areas/Administrador/Content/script/index.js"></script>
+    <script src="~/Areas/Administrador/Content/script/main.js"></script>
+    <script src="~/Areas/Administrador/Content/script/custom.js"></script>
+</body>
+</html>

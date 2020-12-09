@@ -1,0 +1,61 @@
+@charset "utf-8";
+/* CSS Document */
+
+BODY{
+	background:#000;
+	font-family:"Tahoma", verdana, arial;
+	font-size:12px;
+	margin:auto;
+	margin-top:30px;
+}
+
+#capa_titulo_login{
+	background:url(../extranet_archivos/titulo_login.png);
+	font-family:"Tahoma", verdana, arial;
+	height:100px;
+	margin: auto;
+	width:540px;
+}
+
+#capa_cuerpo_login{
+	background-color:#fff;
+	border-radius:10px;
+	color:#000;
+	margin:auto;
+	padding:10px 20px 20px 20px;	
+	width:500px;
+}
+
+input{
+	background-color:#0079DC;
+	border-radius:5px;
+	color:#FFF;
+	height:20px;
+	width:250px;
+}
+
+.boton{
+	height:40px;
+	width:141px;
+}
+
+.textoblanco {
+	font: 9pt tahoma, verdana, Arial, sans-serif; color:#FFFFFF; text-align:justify;
+}
+
+.tituloBlanco {
+	font: 20pt tahoma, verdana, Arial, sans-serif; color:#FFFFFF; text-align:justify;
+}
+
+.subtituloBlanco {
+	font: 14pt tahoma, verdana, Arial, sans-serif; color:#FFFFFF; text-align:justify;
+}
+
+.link{
+	color:#333;
+	text-decoration:none;
+}
+
+
+
+

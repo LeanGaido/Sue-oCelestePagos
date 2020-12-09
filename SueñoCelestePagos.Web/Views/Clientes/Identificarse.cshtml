@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "Identificarse";
+}
+
+<div class="heading main centered">
+    <h3 class="uppercase lg-title">Bienvenido <span class="main-color"></span></h3><b class="head-sep"><u></u></b><b class="head-sep"><u></u></b>
+</div>
+
+<div class="global-container">
+    <div class="card login-form">
+        <div class="card-body">
+            <h3 class="card-title text-center"></h3>
+            <div class="card-text">
+                @using (Html.BeginForm())
+                {
+                    <!-- to error: add class "has-danger" -->
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="Sexo">Sexo</label>
+                                <select name="Sexo" id="Sexo" class="form-control">
+                                    <option value="Hombre">Hombre</option>
+                                    <option value="Mujer">Mujer</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-8">
+                                <label for="Dni">DNI<small>(Solo numeros, sin puntos o guiones)</small></label>
+                                <input type="number" class="form-control form-control-sm" name="Dni" id="Dni" placeholder="Dni">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <button type="submit" class="btn btn-primary btn-block">Siguiente</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+﻿@model SueñoCelestePagos.Web.Models.LoginViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>ContentAdmin | Sistema Administrador</title>
+    <link href="~/Areas/Administrador/Content/styles/login.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div align="center"><img src="~/Areas/Administrador/Content/images/logo_contentadmin.jpg"></div>
+    <p></p>
+    <div id="capa_cuerpo_login">
+        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl, Area = "" }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <table border="0" width="100%" height="100">
+                <tr>
+                    <td width="5%">&nbsp;</td>
+                    <td colspan="5">
+                        <h2>LOGIN DE ACCESO</h2>
+                        <P></P>
+                        Ingrese el usuario y contraseña para poder acceder al Sistema Administrador.
+                        &nbsp;
+                        <p></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="5%">&nbsp;</td>
+                    <td width="35%"><b>NOMBRE DE USUARIO:</b></td>
+                    <td rowspan="2" width="1px" height="50px" bgcolor="#dcdcdc"></td>
+                    <td width="5%">&nbsp;</td>
+                    <td>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "texto10", required = true, type = "email" })
+                    </td>
+                    <td width="5%">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td width="5%">&nbsp;</td>
+                    <td width="35%"><b>CONTRASEÑA:</b></td>
+                    <td width="5%">&nbsp;</td>
+                    <td><input type="password" name="Password" id="Password" required class="texto10"></td>
+                    <td width="5%">&nbsp;</td>
+                </tr>
+            </table>
+            <div class="form-group" style="display:none">
+                @Html.CheckBoxFor(model => Model.Admin, new { @checked = "true" })
+            </div>
+            <P>
+                <div align="center"><input type="submit" name="ingresar" value="INGRESAR" class="boton"></div>
+                &nbsp;
+            </P>
+        }
+    </div>
+</body>
+</html>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

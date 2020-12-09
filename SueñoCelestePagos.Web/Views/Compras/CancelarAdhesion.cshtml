@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "Cancelar Adhesion";
+}
+<div class="heading main centered">
+    <h3 class="uppercase lg-title">CANCELAR ADHESION: <span class="main-color"></span></h3><b class="head-sep"><u></u></b><b class="head-sep"><u></u></b>
+</div>
+
+<div class="global-container">
+    <div class="card login-form">
+        <div class="card-body">
+            <div class="panel">
+                <div class="panel-body">
+                </div>
+            </div>
+            <div class="card-text">
+                @using (Html.BeginForm())
+                {
+                    <div class="form-group">
+                        <label for="TipoDePago">Siguiente Tipo De Pago</label>
+                        <select class="form-control" name="Respuesta" id="Respuesta">
+                            <option value="1">Cancelar Compra del Carton</option>
+                            <option value="2">Pagar Cuotas Restantes en un Pago</option>
+                            <option value="3">Pasar a Pagar Cuotas Restantes en un Plan de Pago Manual</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Cancelar Adhesion</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EB4776FC-05DA-4951-A1C5-99EA0B584952}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SueñoCelestePagos.Dal</RootNamespace>
+    <AssemblyName>SueñoCelestePagos.Dal</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Migrations\202009102116004_Init.cs" />
+    <Compile Include="Migrations\202009102116004_Init.Designer.cs">
+      <DependentUpon>202009102116004_Init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009111316527_CartonVendido_PagoRealizado-PagoCancelado.cs" />
+    <Compile Include="Migrations\202009111316527_CartonVendido_PagoRealizado-PagoCancelado.Designer.cs">
+      <DependentUpon>202009111316527_CartonVendido_PagoRealizado-PagoCancelado.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009111439009_CuotaPlanDePago_PagoId.cs" />
+    <Compile Include="Migrations\202009111439009_CuotaPlanDePago_PagoId.Designer.cs">
+      <DependentUpon>202009111439009_CuotaPlanDePago_PagoId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009111853571_Carton_Precio.cs" />
+    <Compile Include="Migrations\202009111853571_Carton_Precio.Designer.cs">
+      <DependentUpon>202009111853571_Carton_Precio.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009111937047_FechaPago-Nulleable.cs" />
+    <Compile Include="Migrations\202009111937047_FechaPago-Nulleable.Designer.cs">
+      <DependentUpon>202009111937047_FechaPago-Nulleable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009112057113_application.cs" />
+    <Compile Include="Migrations\202009112057113_application.Designer.cs">
+      <DependentUpon>202009112057113_application.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009142031045_FechasDeVencimiento.cs" />
+    <Compile Include="Migrations\202009142031045_FechasDeVencimiento.Designer.cs">
+      <DependentUpon>202009142031045_FechasDeVencimiento.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009142147522_MesyAño_CuotaPlanDePago.cs" />
+    <Compile Include="Migrations\202009142147522_MesyAño_CuotaPlanDePago.Designer.cs">
+      <DependentUpon>202009142147522_MesyAño_CuotaPlanDePago.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009162153063_Adhesion.cs" />
+    <Compile Include="Migrations\202009162153063_Adhesion.Designer.cs">
+      <DependentUpon>202009162153063_Adhesion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009171151549_cbu_holder_id_number-long.cs" />
+    <Compile Include="Migrations\202009171151549_cbu_holder_id_number-long.Designer.cs">
+      <DependentUpon>202009171151549_cbu_holder_id_number-long.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009172025427_debitosYAdhesiones.cs" />
+    <Compile Include="Migrations\202009172025427_debitosYAdhesiones.Designer.cs">
+      <DependentUpon>202009172025427_debitosYAdhesiones.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009181430057_CompraOffline.cs" />
+    <Compile Include="Migrations\202009181430057_CompraOffline.Designer.cs">
+      <DependentUpon>202009181430057_CompraOffline.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009281354579_PagosCarton.cs" />
+    <Compile Include="Migrations\202009281354579_PagosCarton.Designer.cs">
+      <DependentUpon>202009281354579_PagosCarton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009291956171_DebitoId.cs" />
+    <Compile Include="Migrations\202009291956171_DebitoId.Designer.cs">
+      <DependentUpon>202009291956171_DebitoId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202010011406117_PagoCarton-CuotaId.cs" />
+    <Compile Include="Migrations\202010011406117_PagoCarton-CuotaId.Designer.cs">
+      <DependentUpon>202010011406117_PagoCarton-CuotaId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SueñoCelestePagosContext.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SueñoCelestePagos.Entities\SueñoCelestePagos.Entities.csproj">
+      <Project>{8d2b4466-ed66-4b49-9d07-f66e17c74caa}</Project>
+      <Name>SueñoCelestePagos.Entities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202009102116004_Init.resx">
+      <DependentUpon>202009102116004_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009111316527_CartonVendido_PagoRealizado-PagoCancelado.resx">
+      <DependentUpon>202009111316527_CartonVendido_PagoRealizado-PagoCancelado.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009111439009_CuotaPlanDePago_PagoId.resx">
+      <DependentUpon>202009111439009_CuotaPlanDePago_PagoId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009111853571_Carton_Precio.resx">
+      <DependentUpon>202009111853571_Carton_Precio.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009111937047_FechaPago-Nulleable.resx">
+      <DependentUpon>202009111937047_FechaPago-Nulleable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009112057113_application.resx">
+      <DependentUpon>202009112057113_application.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009142031045_FechasDeVencimiento.resx">
+      <DependentUpon>202009142031045_FechasDeVencimiento.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009142147522_MesyAño_CuotaPlanDePago.resx">
+      <DependentUpon>202009142147522_MesyAño_CuotaPlanDePago.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009162153063_Adhesion.resx">
+      <DependentUpon>202009162153063_Adhesion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009171151549_cbu_holder_id_number-long.resx">
+      <DependentUpon>202009171151549_cbu_holder_id_number-long.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009172025427_debitosYAdhesiones.resx">
+      <DependentUpon>202009172025427_debitosYAdhesiones.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009181430057_CompraOffline.resx">
+      <DependentUpon>202009181430057_CompraOffline.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009281354579_PagosCarton.resx">
+      <DependentUpon>202009281354579_PagosCarton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009291956171_DebitoId.resx">
+      <DependentUpon>202009291956171_DebitoId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202010011406117_PagoCarton-CuotaId.resx">
+      <DependentUpon>202010011406117_PagoCarton-CuotaId.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,267 @@
+﻿@model IEnumerable<SueñoCelestePagos.Entities.PagoCartonVendido>
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<!--BEGIN TITLE & BREADCRUMB PAGE-->
+<div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
+    <div class="page-header pull-left">
+        <div class="page-title">
+            DETALLE DE PAGOS DE LA COMPRA
+        </div>
+    </div>
+    <ol class="breadcrumb page-breadcrumb pull-right">
+        <li><i class="fa fa-home"></i>&nbsp;<a href="@Url.Action("Index","Home")">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+        <li class="hidden"><a href="#"></a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+        <li class="active">Principal</li>
+    </ol>
+    <div class="clearfix">
+    </div>
+</div>
+<!--END TITLE & BREADCRUMB PAGE-->
+
+<br />
+@*<div id="title-breadcrumb-option-demo" class="page-title-breadcrumb" style="border-left:5px solid #e5e5e5;border-top:5px solid #e5e5e5;border-right:5px solid #e5e5e5">
+    <div class="col-md-8">
+        @using (Html.BeginForm())
+        {
+            <div class="col-md-6">
+                <input type="text" name="searchString" id="searchString" class="form-control" value="@ViewBag.CurrentFilter " />
+            </div>
+            <div class="col-md-2">
+                <input type="submit" value="Buscar" class="btn btn-primary" />
+            </div>
+        }
+    </div>
+    <div class="clearfix">
+    </div>
+</div>*@
+
+<!--BEGIN CONTENT-->
+<div class="page-content">
+    <div id="tab-general">
+        <div class="panel" style="color:#000">
+            <div class="panel-heading">
+                <h3 class="text-center">Compra</h3>
+            </div>
+            <div class="panel-body">
+                <div>
+                    <hr />
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayName("Nombre Completo")
+                        </dt>
+
+                        <dd>
+                            @ViewBag.Cliente.NombreCompleto
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayName("Dni")
+                        </dt>
+
+                        <dd>
+                            @ViewBag.Cliente.Dni
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayName("Celular")
+                        </dt>
+
+                        <dd>
+                            @ViewBag.Cliente.Celular
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayName("Domicilio")
+                        </dt>
+
+                        <dd>
+                            @ViewBag.Cliente.Domicilio
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayName("Localidad")
+                        </dt>
+
+                        <dd>
+                            @ViewBag.Cliente.Localidad.Nombre
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayName("Provincia")
+                        </dt>
+
+                        <dd>
+                            @ViewBag.Cliente.Localidad.Provincia.Nombre
+                        </dd>
+
+                        <hr />
+
+                        <dt>
+                            @Html.DisplayName("Fecha de la Compra")
+                        </dt>
+
+                        <dd>
+                            @ViewBag.Compra.FechaVenta
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayName("Numero del Carton")
+                        </dt>
+
+                        <dd>
+                            @ViewBag.Compra.Carton.Numero
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayName("Tipo De Pago")
+                        </dt>
+
+                        <dd>
+                            @ViewBag.Compra.TipoDePago.Descripcion
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayName("Cant de Cuotas")
+                        </dt>
+
+                        <dd>
+                            @ViewBag.Compra.CantCuotas
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayName("Precio Carton")
+                        </dt>
+
+                        <dd>
+                            @ViewBag.Compra.Carton.Precio
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayName("Estado Del Pago")
+                        </dt>
+
+                        @if (!ViewBag.Compra.PagoCancelado)
+                        {
+                            if (ViewBag.Compra.PagoRealizdo)
+                            {
+                                <dd>
+                                    Pago Realizado
+                                </dd>
+                            }
+                            else
+                            {
+                                <dd>
+                                    Pago Pendiente
+                                </dd>
+                            }
+                        }
+                        else
+                        {
+                            <dd>
+                                Pago Cancelado
+                            </dd>
+                        }
+                    </dl>
+                </div>
+                <div>
+                    <hr />
+                    @if (Model != null && Model.Count() > 0)
+                    {
+
+                        <table class="table">
+                            <tr>
+                                <th>
+                                    Numero del Carton
+                                </th>
+                                <th>
+                                    Año
+                                </th>
+                                <th>
+                                    Tipo de Pago
+                                </th>
+                                <th>
+                                    Importe
+                                </th>
+                                <th>
+                                    Pagado
+                                </th>
+                                <th></th>
+                            </tr>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CartonVendido.Carton.Numero)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CartonVendido.Carton.Año)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TipoDePago.Descripcion)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Pago)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Pagado)
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            }
+                            @*<tfoot>
+                                @Html.ActionLink("Volver", "Index", new { page = ViewBag.Page }, new { @Class = "btn btn-primary" })
+                                <br />
+                            </tfoot>*@
+                        </table>
+
+                        @*<div class="text-center">
+                            Pagina @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+
+                            @Html.PagedListPager(Model, page => Url.Action("Index",
+                                new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+                        </div>*@
+                    }
+                    else
+                    {
+                        <div class="col-md-12">
+                            <div class="panel">
+                                <div class="panel-heading">
+                                    <h3 class="text-center">Su Busqueda no dio Resultados</h3>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <hr />
+                <p>
+                    @Html.ActionLink("Volver", "Index", new { page = ViewBag.Page }, new { @Class = "btn btn-primary" })
+                </p>
+            </div>
+        </div>
+
+        @*<div class="panel">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <label>Nombre: </label>
+                        <input readonly value="@ViewBag.Cliente.NombreCompleto" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label>Nro Carton: </label>
+                        <input readonly value="@ViewBag.NumeroCarton" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label>Fecha de la Compra: </label>
+                        <input readonly value="@ViewBag.FechaVenta" class="form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>*@
+        
+    </div>
+</div>
+<!--END CONTENT-->

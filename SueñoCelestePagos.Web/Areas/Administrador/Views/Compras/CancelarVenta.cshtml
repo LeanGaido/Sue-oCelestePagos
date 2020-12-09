@@ -1,0 +1,160 @@
+﻿@model SueñoCelestePagos.Entities.CartonVendido
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<!--BEGIN TITLE & BREADCRUMB PAGE-->
+<div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
+    <div class="page-header pull-left">
+        <div class="page-title">
+            Fechas de Vencimientos
+        </div>
+    </div>
+    <ol class="breadcrumb page-breadcrumb pull-right">
+        <li><i class="fa fa-home"></i>&nbsp;<a href="@Url.Action("Index","Home")">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+        <li class="hidden"><a href="#"></a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+        <li class="active">Principal</li>
+    </ol>
+    <div class="clearfix">
+    </div>
+</div>
+<!--END TITLE & BREADCRUMB PAGE-->
+<!--BEGIN CONTENT-->
+<div class="page-content">
+    <div id="tab-general">
+        <div class="col-md-2">
+
+        </div>
+        <div class="col-md-8">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="text-center"></h3>
+                </div>
+                <div class="panel-body">
+                    <h3>¿Estas seguro de querer Cancelar esta Venta?</h3>
+                    <hr />
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayName("Nombre Completo")
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Cliente.NombreCompleto)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Cliente.Dni)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Cliente.Dni)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Cliente.Celular)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Cliente.Celular)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Cliente.Domicilio)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Cliente.Domicilio)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayName("Localidad")
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Cliente.Localidad.Nombre)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayName("Provincia")
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Cliente.Localidad.Provincia.Nombre)
+                        </dd>
+
+                        <hr />
+
+                        <dt>
+                            @Html.DisplayName("Fecha de la Compra")
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.FechaVenta)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayName("Numero del Carton")
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Carton.Numero)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayName("Tipo De Pago")
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.TipoDePago.Descripcion)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Carton.Precio)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Carton.Precio)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayName("Estado Del Pago")
+                        </dt>
+
+                        @if (!Model.PagoCancelado)
+                        {
+                            if (Model.PagoRealizdo)
+                            {
+                                <dd>
+                                    Pago Realizado
+                                </dd>
+                            }
+                            else
+                            {
+                                <dd>
+                                    Pago Pendiente
+                                </dd>
+                            }
+                        }
+                        else
+                        {
+                            <dd>
+                                Pago Cancelado
+                            </dd>
+                        }
+                    </dl>
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-actions no-color">
+                            <input type="submit" value="Cancelar" class="btn btn-default" /> |
+                            @Html.ActionLink("Volver", "VentasACancelar", new { page = ViewBag.Page })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

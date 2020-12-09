@@ -1,0 +1,242 @@
+﻿
+@{
+    ViewBag.Title = "Registro de Datos";
+}
+
+<div class="heading main centered">
+    <h3 class="uppercase lg-title">PROCESO DE COMPRA: <span class="main-color">REGISTRO</span></h3><b class="head-sep"><u></u></b><b class="head-sep"><u></u></b>
+    <input type="hidden" value="@ViewBag.Expira" id="Expira" />
+</div>
+
+<div class="container-fluid">
+    <div class="timer">
+        <div class="timer--clock">
+            <div class="minutes-group clock-display-grp">
+                <div class="first number-grp">
+                    <div class="number-grp-wrp">
+                        <div class="num num-0"><p>0</p></div>
+                        <div class="num num-1"><p>1</p></div>
+                        <div class="num num-2"><p>2</p></div>
+                        <div class="num num-3"><p>3</p></div>
+                        <div class="num num-4"><p>4</p></div>
+                        <div class="num num-5"><p>5</p></div>
+                        <div class="num num-6"><p>6</p></div>
+                        <div class="num num-7"><p>7</p></div>
+                        <div class="num num-8"><p>8</p></div>
+                        <div class="num num-9"><p>9</p></div>
+                    </div>
+                </div>
+                <div class="second number-grp">
+                    <div class="number-grp-wrp">
+                        <div class="num num-0"><p>0</p></div>
+                        <div class="num num-1"><p>1</p></div>
+                        <div class="num num-2"><p>2</p></div>
+                        <div class="num num-3"><p>3</p></div>
+                        <div class="num num-4"><p>4</p></div>
+                        <div class="num num-5"><p>5</p></div>
+                        <div class="num num-6"><p>6</p></div>
+                        <div class="num num-7"><p>7</p></div>
+                        <div class="num num-8"><p>8</p></div>
+                        <div class="num num-9"><p>9</p></div>
+                    </div>
+                </div>
+            </div>
+            <div class="clock-separator"><p>:</p></div>
+            <div class="seconds-group clock-display-grp">
+                <div class="first number-grp">
+                    <div class="number-grp-wrp">
+                        <div class="num num-0"><p>0</p></div>
+                        <div class="num num-1"><p>1</p></div>
+                        <div class="num num-2"><p>2</p></div>
+                        <div class="num num-3"><p>3</p></div>
+                        <div class="num num-4"><p>4</p></div>
+                        <div class="num num-5"><p>5</p></div>
+                        <div class="num num-6"><p>6</p></div>
+                        <div class="num num-7"><p>7</p></div>
+                        <div class="num num-8"><p>8</p></div>
+                        <div class="num num-9"><p>9</p></div>
+                    </div>
+                </div>
+                <div class="second number-grp">
+                    <div class="number-grp-wrp">
+                        <div class="num num-0"><p>0</p></div>
+                        <div class="num num-1"><p>1</p></div>
+                        <div class="num num-2"><p>2</p></div>
+                        <div class="num num-3"><p>3</p></div>
+                        <div class="num num-4"><p>4</p></div>
+                        <div class="num num-5"><p>5</p></div>
+                        <div class="num num-6"><p>6</p></div>
+                        <div class="num num-7"><p>7</p></div>
+                        <div class="num num-8"><p>8</p></div>
+                        <div class="num num-9"><p>9</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="global-container">
+    <div class="card login-form">
+        <div class="card-body">
+            <h3 class="card-title text-center">Bienvenido</h3>
+            <div class="card-text">
+                @using (Html.BeginForm())
+                {
+                    <div class="form-group">
+                        <div class="col-sm-6" style="padding:0px;">
+                            <label for="Nombre">Nombre</label>
+                        </div>
+                        <div class="col-sm-6" style="padding:0px;">
+                            <label for="Nombre">Apellido</label>
+                        </div>
+                        <div class="col-sm-6" style="padding:0px;">
+                            <input type="text" class="form-control" name="Nombre" id="Nombre" placeholder="Nombre" required>
+                        </div>
+                        <div class="col-sm-6" style="padding:0px;">
+                            <input type="text" class="form-control" name="Apellido" id="Apellido" placeholder="Apellido" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Email">Email</label>
+                        <input type="email" class="form-control" name="Email" id="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="FechaNacimiento">Fecha de Nacimiento</label>
+                        <input type="date" class="form-control" name="FechaNacimiento" id="FechaNacimiento" required>
+                    </div>
+                    <div class="form-group" style="overflow:visible">
+                        <label for="LocalidadID">Localidad</label>
+                        @Html.DropDownList("LocalidadID", null, new { @class = "form-control selectpicker", data_live_search="true" })
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12" style="padding:0px;">
+                            <label for="Nombre">Domicilio</label>
+                        </div>
+                        <div class="col-sm-9" style="padding:0px;">
+                            <label for="Nombre">Calle</label>
+                        </div>
+                        <div class="col-sm-3" style="padding:0px;">
+                            <label for="Nombre">Altura</label>
+                        </div>
+                        <div class="col-sm-9" style="padding:0px;">
+                            <input type="text" class="form-control" name="Calle" id="Calle" placeholder="Calle" required>
+                        </div>
+                        <div class="col-sm-3" style="padding:0px;">
+                            <input type="text" class="form-control" name="Altura" id="Altura" placeholder="Altura" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Siguiente</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.1/TweenMax.min.js"></script>
+<script>
+    TweenLite.defaultEase = Expo.easeOut;
+
+    var timeLeft = $('#Expira').val();
+    //var timeLeft = "20:00";
+
+    initTimer(timeLeft); // other ways --> "0:15" "03:5" "5:2"
+
+    var timerEl = document.querySelector('.timer');
+
+    function initTimer(t) {
+
+        var self = this,
+            timerEl = document.querySelector('.timer'),
+            minutesGroupEl = timerEl.querySelector('.minutes-group'),
+            secondsGroupEl = timerEl.querySelector('.seconds-group'),
+
+            minutesGroup = {
+                firstNum: minutesGroupEl.querySelector('.first'),
+                secondNum: minutesGroupEl.querySelector('.second')
+            },
+
+            secondsGroup = {
+                firstNum: secondsGroupEl.querySelector('.first'),
+                secondNum: secondsGroupEl.querySelector('.second')
+            };
+
+        var time = {
+            min: t.split(':')[0],
+            sec: t.split(':')[1]
+        };
+
+        var timeNumbers;
+
+        function updateTimer() {
+
+            var timestr;
+            var date = new Date();
+
+            date.setHours(0);
+            date.setMinutes(time.min);
+            date.setSeconds(time.sec);
+
+            var newDate = new Date(date.valueOf() - 1000);
+            var temp = newDate.toTimeString().split(" ");
+            var tempsplit = temp[0].split(':');
+
+            time.min = tempsplit[1];
+            time.sec = tempsplit[2];
+
+            timestr = time.min + time.sec;
+            timeNumbers = timestr.split('');
+            updateTimerDisplay(timeNumbers);
+
+            if (timestr === '0000')
+                countdownFinished();
+
+            if (timestr != '0000')
+                setTimeout(updateTimer, 1000);
+
+        }
+
+        function countdownFinished() {
+            setTimeout(function () {
+                $.ajax({
+                    type: "POST",
+                    traditional: true,
+                    async: false,
+                    cache: false,
+                    url: '/Compras/CancelarReserva',
+                    data: {
+
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+
+                    },
+                    error: function (ex) {
+                        alert('Error, por favor intente mas tarde.');
+                    }
+                });
+            }, 1000);
+        }
+
+        function updateTimerDisplay(arr) {
+
+            animateNum(minutesGroup.firstNum, arr[0]);
+            animateNum(minutesGroup.secondNum, arr[1]);
+            animateNum(secondsGroup.firstNum, arr[2]);
+            animateNum(secondsGroup.secondNum, arr[3]);
+
+        }
+
+        function animateNum(group, arrayValue) {
+
+            TweenMax.killTweensOf(group.querySelector('.number-grp-wrp'));
+            TweenMax.to(group.querySelector('.number-grp-wrp'), 1, {
+                y: - group.querySelector('.num-' + arrayValue).offsetTop
+            });
+
+        }
+
+        setTimeout(updateTimer, 1000);
+    }
+</script>

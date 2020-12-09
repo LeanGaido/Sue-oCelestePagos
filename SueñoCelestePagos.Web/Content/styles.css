@@ -1,0 +1,286 @@
+﻿.containerBolillero {
+    width: 625px;
+    margin: 0 auto;
+}
+
+    .containerBolillero .roulette_area .roulette:after {
+        content: "\0020";
+        display: block;
+        height: 0;
+        clear: both;
+        overflow: hidden;
+        visibility: hidden;
+    }
+
+    .containerBolillero .roulette_area .roulette li {
+        position: relative;
+        float: left;
+        width: 100px;
+        height: 100px;
+        margin-left: 10px;
+        border: 1px solid #666;
+        overflow: hidden;
+        background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #666666), color-stop(100%, #000000));
+        background-image: -webkit-linear-gradient(#666666, #000000);
+        background-image: -moz-linear-gradient(#666666, #000000);
+        background-image: -o-linear-gradient(#666666, #000000);
+        background-image: linear-gradient(#666666, #000000);
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        -ms-border-radius: 5px;
+        -o-border-radius: 5px;
+        border-radius: 5px;
+    }
+
+        /* line 67, ../sass/style.scss */
+        .containerBolillero .roulette_area .roulette li:first-child {
+            margin-left: 0px;
+        }
+        /* line 71, ../sass/style.scss */
+        .containerBolillero .roulette_area .roulette li .wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .containerBolillero .roulette_area .roulette li .wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+            /* line 75, ../sass/style.scss */
+            .containerBolillero .roulette_area .roulette li .wrapper div {
+                position: absolute;
+                color: #ddd;
+                width: 180px;
+                font-size: 100px;
+                line-height: 100%;
+                padding-left: 25px;
+                text-shadow: -1px -1px 1px black;
+            }
+
+    .containerBolillero .roulette_area .btn_start {
+        width: auto;
+        padding: 16px;
+        text-align: center;
+        font-size: 24px;
+        color: #533b01;
+        margin-top: 20px;
+        border: 1px solid #6c4c00;
+        cursor: pointer;
+        background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #26abff), color-stop(100%, #337ab7));
+        background-image: -webkit-linear-gradient(#26abff, #337ab7);
+        background-image: -moz-linear-gradient(#26abff, #337ab7);
+        background-image: -o-linear-gradient(#26abff, #337ab7);
+        background-image: linear-gradient(#26abff, #337ab7);
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        -ms-border-radius: 5px;
+        -o-border-radius: 5px;
+        border-radius: 5px;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+    }
+
+        /* line 103, ../sass/style.scss */
+        .containerBolillero .roulette_area .btn_start:hover {
+            color:#fff;
+            background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #0091EC), color-stop(100%, #0867B8));
+            background-image: -webkit-linear-gradient(#0091EC, #0867B8);
+            background-image: -moz-linear-gradient(#0091EC, #0867B8);
+            background-image: -o-linear-gradient(#0091EC, #0867B8);
+            background-image: linear-gradient(#0091EC, #0867B8);
+        }
+
+
+/*=================*
+    TIMER
+*=================*/
+.timer {
+  width: 550px;
+  /*height: 248px;*/
+  display: block;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  margin-left: -185px;
+  /*margin-top: -124px;*/
+  /*color: white;*/
+}
+.timer * {
+  cursor: default;
+}
+.timer h3 {
+  width: 100%;
+  font-size: 26px;
+  letter-spacing: 4px;
+  text-align: center;
+}
+.timer--clock {
+  width: 100%;
+  position: relative;
+  padding-left: 6px;
+  margin-top: 22px;
+  overflow: hidden;
+}
+.timer--clock .clock-display-grp {
+  width: 100%;
+  position: relative;
+}
+.timer--clock .clock-display-grp .number-grp {
+  width: auto;
+  display: block;
+  height: 156px;
+  float: left;
+  overflow: hidden;
+}
+.timer--clock .clock-display-grp .number-grp .number-grp-wrp {
+  width: 100%;
+  position: relative;
+}
+.timer--clock .clock-display-grp .number-grp .number-grp-wrp .num {
+  width: 100%;
+  position: relative;
+  height: 156px;
+}
+.timer--clock .clock-display-grp .number-grp .number-grp-wrp .num p {
+  width: auto;
+  display: table;
+  font-size: 125px;
+  line-height: 150px;
+  font-weight: bold;
+}
+.timer--clock .clock-separator {
+  width: auto;
+  float: left;
+  display: block;
+  height: 156px;
+}
+.timer--clock .clock-separator p {
+  width: auto;
+  display: table;
+  font-size: 125px;
+  line-height: 150px;
+  font-weight: bold;
+}
+.timer h4 {
+  width: 100%;
+  font-size: 10px;
+  letter-spacing: 6px;
+  text-align: center;
+  padding-top: 25px;
+  float: left;
+}
+
+.reload {
+  width: 125px;
+  height: 14px;
+  position: absolute;
+  bottom: 50vh;
+  left: 50%;
+  margin-left: -62.5px;
+  opacity: 0;
+  display: none;
+  cursor: pointer;
+  z-index: 9999;
+}
+.reload:hover svg path {
+  fill: #666666;
+}
+.reload:hover p {
+  color: #666666;
+}
+.reload svg {
+  width: 12px;
+  height: 12px;
+  float: left;
+  margin-right: 10px;
+}
+.reload p {
+  color: #000;
+  font-size: 12px;
+  float: left;
+  line-height: 11px;
+}
+
+
+@media (max-width: 600px) {
+  .containerBolillero {
+    width: 100%;
+    margin: 0 auto;
+  }
+  
+
+  .containerBolillero .roulette_area .roulette li {
+    width: 90px;
+    height: 90px;
+    margin-left: 10px;
+  }
+  .containerBolillero .roulette_area .roulette li .wrapper div {
+    width: 180px;
+    font-size: 90px;
+    line-height: 100%;
+    padding-left:22px;
+  }
+}
+
+@media (max-width: 550px) {
+  .containerBolillero .roulette_area .roulette li {
+    width: 75px;
+    height: 75px;
+    margin-left: 10px;
+  }
+  .containerBolillero .roulette_area .roulette li .wrapper div {
+    width: 160px;
+    font-size: 75px;
+    line-height: 100%;
+    padding-left:20px;
+  }
+}
+
+@media (max-width: 500px) {
+  .containerBolillero .roulette_area .roulette li {
+    width: 70px;
+    height: 70px;
+    margin-left: 10px;
+  }
+  .containerBolillero .roulette_area .roulette li .wrapper div {
+    width: 150px;
+    font-size: 70px;
+    line-height: 100%;
+    padding-left:17px;
+  }
+}
+
+@media (max-width: 450px) {
+  .containerBolillero .roulette_area .roulette li {
+    width: 60px;
+    height: 60px;
+    margin-left: 10px;
+  }
+  .containerBolillero .roulette_area .roulette li .wrapper div {
+    width: 140px;
+    font-size: 60px;
+    line-height: 100%;
+    padding-left:15px;
+  }
+}
+
+@media (max-width: 400px) {
+  .containerBolillero .roulette_area .roulette li {
+    width: 50px;
+    height: 50px;
+    margin-left: 10px;
+  }
+  .containerBolillero .roulette_area .roulette li .wrapper div {
+    width: 130px;
+    font-size: 50px;
+    line-height: 100%;
+    padding-left:12px;
+  }
+}

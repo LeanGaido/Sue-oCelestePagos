@@ -1,0 +1,95 @@
+﻿@model SueñoCelestePagos.Entities.Cliente
+@{
+    ViewBag.Title = "ActualizarDatos";
+}
+
+<div class="heading main centered">
+    <h3 class="uppercase lg-title">Mi Datos Personales: <span class="main-color"></span></h3><b class="head-sep"><u></u></b><b class="head-sep"><u></u></b>
+</div>
+
+<div class="global-container">
+    <div class="card login-form">
+        <div class="card-body">
+            <h3 class="card-title text-center">Bienvenido</h3>
+            <div class="card-text">
+                @using (Html.BeginForm())
+                {
+                    @Html.HiddenFor(Model => Model.ID)
+                    <div class="form-group">
+                        <div class="col-sm-6" style="padding:0px;">
+                            <label for="Nombre">Nombre</label>
+                        </div>
+                        <div class="col-sm-6" style="padding:0px;">
+                            <label for="Nombre">Apellido</label>
+                        </div>
+                        <div class="col-sm-6" style="padding:0px;">
+                            <input type="text" class="form-control" name="Nombre" id="Nombre" placeholder="Nombre" value="@Model.Nombre" readonly>
+                        </div>
+                        <div class="col-sm-6" style="padding:0px;">
+                            <input type="text" class="form-control" name="Apellido" id="Apellido" placeholder="Apellido" value="@Model.Apellido" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-6" style="padding:0px;">
+                            <label for="Nombre">Dni</label>
+                        </div>
+                        <div class="col-sm-6" style="padding:0px;">
+                            <label for="Nombre">Sexo</label>
+                        </div>
+                        <div class="col-sm-6" style="padding:0px;">
+                            <input type="text" class="form-control" name="Dni" id="Dni" placeholder="Dni" value="@Model.Dni" readonly>
+                        </div>
+                        <div class="col-sm-6" style="padding:0px;">
+                            <input type="text" class="form-control" name="Sexo" id="Sexo" placeholder="Sexo" value="@Model.Sexo" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-6" style="padding:0px;">
+                            <label for="Nombre">Prefijo</label>
+                        </div>
+                        <div class="col-sm-6" style="padding:0px;">
+                            <label for="Nombre">Numero</label>
+                        </div>
+                        <div class="col-sm-6" style="padding:0px;">
+                            <input type="text" class="form-control" name="AreaCelular" id="AreaCelular" placeholder="Prefijo" value="@Model.AreaCelular" readonly>
+                        </div>
+                        <div class="col-sm-6" style="padding:0px;">
+                            <input type="text" class="form-control" name="NumeroCelular" id="NumeroCelular" placeholder="Numero" value="@Model.NumeroCelular" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Email">Email</label>
+                        <input type="email" class="form-control" name="Email" id="Email" value="@Model.Email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="FechaNacimiento">Fecha de Nacimiento</label>
+                        @Html.EditorFor(Model => Model.FechaNacimiento, null, new { htmlAttributes = new { @Class = "form-control", @readonly = "true" } })
+                        @*<input type="date" class="form-control" name="FechaNacimiento" id="FechaNacimiento" value="@Model.FechaNacimiento" readonly>*@
+                    </div>
+                    <div class="form-group" style="overflow:visible">
+                        <label for="LocalidadID">Localidad</label>
+                        @Html.DropDownList("LocalidadID", null, new { @class = "form-control selectpicker", data_live_search = "true" })
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12" style="padding:0px;">
+                            <label for="Nombre">Domicilio</label>
+                        </div>
+                        <div class="col-sm-9" style="padding:0px;">
+                            <label for="Nombre">Calle</label>
+                        </div>
+                        <div class="col-sm-3" style="padding:0px;">
+                            <label for="Nombre">Altura</label>
+                        </div>
+                        <div class="col-sm-9" style="padding:0px;">
+                            <input type="text" class="form-control" name="Calle" id="Calle" placeholder="Calle" value="@Model.Calle" required>
+                        </div>
+                        <div class="col-sm-3" style="padding:0px;">
+                            <input type="text" class="form-control" name="Altura" id="Altura" placeholder="Altura" value="@Model.Altura" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Actualizar</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>

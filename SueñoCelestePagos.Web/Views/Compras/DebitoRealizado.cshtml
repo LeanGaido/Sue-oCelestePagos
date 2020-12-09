@@ -1,0 +1,46 @@
+﻿<div class="global-container">
+    <div class="card login-form">
+        <div class="card-body">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">
+                    <div class="row" style="padding-left:10px;padding-right:10px">
+                        @if (!Model.PagoRealizdo)
+                        {
+                            <div class="pull-left"><a href="@Url.Action("CancelarAdhesion","Compras")" class="btn btn-primary">Cancelar Adhesion</a></div>
+                        }
+                        <div class="pull-right"><a href="@Url.Action("ActualizarDatos","Clientes")" class="btn btn-primary">Actualizar Mis Datos</a></div>
+                    </div>
+                </div>
+                @*<div class="panel-body">
+                        <p>En esta pantalla aparecen las cuotas pagadas y cuotas pendientes, las cuales podra pagar</p>
+                    </div>*@
+
+                <!-- List group -->
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-10">
+                                Carton Nro° @Model.Carton.Numero: $@Model.Carton.Precio
+                            </div>
+                            <div class="col-md-2">
+                                @if (Model.PagoRealizdo)
+                                {
+                                    <a class="btn btn-success disabled">Debito Realizado</a>
+                                }
+                                else
+                                {
+                                    <a href="@Model.CheckoutUrl" class="btn btn-success">Pendiente de Debito</a>
+                                }
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="panel">
+                <div class="panel-body">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

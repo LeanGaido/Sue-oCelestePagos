@@ -1,0 +1,461 @@
+﻿
+@{
+    ViewBag.Title = "ElegirCarton";
+}
+
+<div class="heading main centered">
+    <h3 class="uppercase lg-title">PROCESO DE COMPRA: <span class="main-color">Paso 2</span></h3><b class="head-sep"><u></u></b><b class="head-sep"><u></u></b>
+</div>
+
+<div class="global-container">
+    <div class="card login-form">
+        <div class="card-body">
+            <div class="panel">
+                <div class="panel-body" style="padding:0px">
+
+                    <div class="containerBolillero">
+                        <div class="roulette_area">
+                            <ul class="roulette">
+                                <li class="slot">
+                                    <div class="wrapper"></div>
+                                </li>
+                                <li class="slot">
+                                    <div class="wrapper"></div>
+                                </li>
+                                <li class="slot">
+                                    <div class="wrapper"></div>
+                                </li>
+                                <li class="slot">
+                                    <div class="wrapper"></div>
+                                </li>
+                                <li class="slot">
+                                    <div class="wrapper"></div>
+                                </li>
+                            </ul>
+                            <audio id="audio_drum" src="~/Content/audio/drumroll.wav"></audio>
+                            <audio id="audio_cymbal" src="~/Content/audio/cymbal.wav"></audio>
+                            <div class="btn_start">Sortear numeros</div>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="card-text">
+                        <div class="form-group" style="overflow:visible">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label for="NumeroCarton">Buscar Carton que </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" name="SearchType" id="SearchType">
+                                        <option value="2">Termine con:</option>
+                                        <option value="1">Contenga:</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" name="SearchString" id="SearchString" />
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" id="BtnBuscarCarton" class="btn btn-primary btn-block">Buscar</button>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row" style="max-height:200px;overflow-y:scroll;overflow-x:hidden;">
+                                <div class="text-center" id="ResultadosBuscarCartones" style="padding:10px;">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+
+                    <div class="card-text">
+                        @using (Html.BeginForm("ReservarCarton", "Compras", FormMethod.Post))
+                        {
+                            <div class="form-group" style="overflow:visible">
+
+                                <input type="hidden" name="NumeroCarton" id="NumeroCarton" />
+                                @*<label for="NumeroCarton">Numero De Carton</label>*@
+                                @*@Html.DropDownList("NumeroCarton", null, "Seleccione un numero de Carton", new { @class = "form-control" })*@
+                                @*<select class="form-control" name="NumeroCarton" id="NumeroCarton">
+                                        @for (int i = 0; i < 3; i++)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>*@
+                            </div>
+
+                            @*<hr />*@
+                            <button type="submit" class="btn btn-primary btn-block">Siguiente</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script>
+    Array.prototype.shuffle = function () {
+        for (var i = this.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = this[i];
+            this[i] = this[j];
+            this[j] = tmp;
+        }
+        return this;
+    }
+
+    function SoundManager() {
+        var drum = document.getElementById('audio_drum');
+        var cymbal = document.getElementById('audio_cymbal');
+
+        return {
+            playDrum: playDrum,
+            stopDrum: stopDrum,
+            //playCymbal: playCymbal
+        }
+
+        function playDrum() {
+            if (drum == null) {
+                return;
+            }
+            drum.currentTime = 1.5;
+            drum.play();
+        }
+
+        function stopDrum() {
+            if (drum == null) {
+                return;
+            }
+            drum.pause();
+        }
+
+        function playCymbal() {
+            if (cymbal == null) {
+                return;
+            }
+            cymbal.currentTime = 0;
+            cymbal.play();
+        }
+    }
+
+    //Calculate number
+    function NumberManager() {
+        var numArr = [];
+        var totalNumArr = [];
+
+        initialize();
+
+        return {
+            initialize: initialize,
+            getNext: getNext,
+            reset: reset
+        }
+
+        function initialize() {
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                async: false,
+                cache: false,
+                url: '/Compras/ObtenerNumeros',
+                data: {
+
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data) {
+                        $.each(data, function (index, value) {
+                            totalNumArr.push(value);
+                        });
+                    }
+                },
+                error: function (ex) {
+                    alert('Error, por favor intente mas tarde.');
+                }
+            });
+            totalNumArr.shuffle();
+        }
+
+        function getNext() {
+            var num = totalNumArr.pop();
+            numArr.push(num);
+            return num;
+        }
+
+        function reset() {
+
+        }
+    }
+
+    //Roulette area
+    function Roulette() {
+        var $container = $('.roulette');
+        var $slots = $('.roulette > .slot');
+        var slotArr = [];
+        var stoppedNum = 0;
+
+        initialize();
+
+        return {
+            initialize: initialize,
+            start: start,
+            reset: reset
+        }
+
+        function initialize() {
+            var arr = [];
+
+            for (var i = 0; i < 10; i++) {
+                arr.push(i);
+            }
+
+            slotArr.push(Slot(arr, $slots[0]));
+            slotArr.push(Slot(arr, $slots[1]));
+            slotArr.push(Slot(arr, $slots[2]));
+            slotArr.push(Slot(arr, $slots[3]));
+            slotArr.push(Slot(arr, $slots[4]));
+        }
+
+        function start(text) {
+            stoppedNum = 0;
+            for (var i = 0; i < slotArr.length; i++) {
+                var slot = slotArr[i];
+                slot.moveTo(text.charAt(i));
+            }
+        }
+
+        function reset() {
+
+        }
+    }
+
+    function Slot(arr, elem) {
+        var slotArr = [];
+        var slotElemArr = [];
+        var container;
+        var height;
+        var currentIndex = 0;
+        var targetCurrentIndex;
+        var intervalId;
+
+        var v0 = 50;
+        var duration = 3000;
+        var revol = 20;
+        var movedPos = 0;
+
+        initialize(arr, elem);
+
+        return {
+            initialize: initialize,
+            moveTo: moveTo
+        }
+
+        function initialize(arr, elem) {
+            container = $(elem).children('.wrapper')[0];
+            height = $(elem).height();
+            for (var i = 0; i < arr.length; i++) {
+                slotArr.push(arr[i]);
+            }
+
+            for (i = 0; i < 3; i++) {
+                var slotElem = document.createElement('div');
+                slotElem.innerHTML = slotArr[i];
+                slotElemArr.push(slotElem);
+                container.appendChild(slotElem);
+                slotElem.style.top = -1 * i * height + 'px';
+            }
+        }
+
+        function getIndex(text) {
+            for (var i = 0; i < slotArr.length; i++) {
+                if (slotArr[i] == text) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        function moveTo(text) {
+            var targetIndex = getIndex(text);
+            targetCurrentIndex = targetIndex - (currentIndex % slotArr.length) + revol + currentIndex;
+            intervalId = setInterval(moving, 30);
+        }
+
+        function resetPosition() {
+            for (var i = 0; i < slotElemArr.length; i++) {
+                var elem = slotElemArr[i];
+                elem.style.top = -1 * i * height + 'px';
+            }
+        }
+
+        function moving() {
+            var nextTop = Number(container.style.top.replace('px', '')) + v0;
+
+            if (nextTop > height) {
+                var num = Math.floor(nextTop / height);
+
+                for (var i = 0; i < num; i++) {
+                    var first = slotElemArr.shift();
+                    var nextIndex = (currentIndex + 3) % slotArr.length;
+                    currentIndex++;
+                    first.innerHTML = slotArr[nextIndex];
+                    slotElemArr.push(first);
+                }
+
+                nextTop = nextTop % height;
+                resetPosition();
+
+            }
+
+            if (currentIndex >= targetCurrentIndex) {
+                var num = currentIndex - targetCurrentIndex;
+                for (var i = 0; i < num; i++) {
+                    var last = slotElemArr.pop();
+                    var nextIndex = (currentIndex - 3 + slotArr.length) % slotArr.length;
+                    currentIndex--;
+                    last.innerHTML = slotArr[nextIndex];
+                    slotElemArr.unshift(last);
+                }
+
+                clearInterval(intervalId);
+                nextTop = -1 * num * height;
+                resetPosition();
+            }
+
+            container.style.top = nextTop + 'px';
+
+        }
+    }
+
+    function initialize() {
+        var numberManager = NumberManager();
+        var soundManager = SoundManager();
+        var roulette = Roulette();
+        var is_moving = false;
+
+        var $startBtn = $('.btn_start');
+        var $resetBtn = $('.btn_reset');
+
+        function start() {
+            if (is_moving) {
+                return;
+            }
+
+            is_moving = true;
+
+            var nextNumber = numberManager.getNext();
+            soundManager.playDrum();
+            $('#NumeroCarton').val(nextNumber.ID);
+            roulette.start(pad(nextNumber.Numero, 5));
+
+            setTimeout(function () {
+                soundManager.stopDrum();
+                //soundManager.playCymbal();
+
+                setTimeout(function () {
+                    is_moving = false;
+                }, 1000);
+            }, 3000);
+
+        }
+
+        function reset() {
+            roulette.reset();
+            numberManager.reset();
+        }
+
+        $startBtn.on('click', start);
+        $resetBtn.on('click', reset);
+
+        /*********************************************************************************/
+
+        function pad(str, max) {
+            str = str.toString();
+            return str.length < max ? pad("0" + str, max) : str;
+        }
+
+        function obtenerNumeros() {
+
+            var SearchType = $('#SearchType').val();
+            var SearchString = $('#SearchString').val();
+
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                async: false,
+                cache: false,
+                url: '/Compras/ObtenerNumeros',
+                data: {
+                    SearchType: SearchType,
+                    SearchString: SearchString
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('#ResultadosBuscarCartones').empty();
+                    if (!$.trim(data)) {
+                        $('#ResultadosBuscarCartones').append('<h3>No hay resultados para la busqueda</h3>');
+                    }
+                    else {
+                        $.each(data, function (index, value) {
+                            $('#ResultadosBuscarCartones').append('<a class="btn btn btn-default BtnSeleccionarCarton" data-id="' + value.ID + '">' + value.Numero + '</a>');
+                        });
+
+
+                        $('.BtnSeleccionarCarton').click(function (e) {
+                            e.preventDefault();
+
+                            var id = $(this).data("id");
+                            var numero = $(this).text();
+
+                            $.ajax({
+                                type: "POST",
+                                traditional: true,
+                                async: false,
+                                cache: false,
+                                url: '/Compras/GetReserva',
+                                data: {
+                                    id: id
+                                },
+                                dataType: 'json',
+                                success: function (data) {
+                                    if (data == false) {
+                                        /***********************/
+                                        $('#NumeroCarton').val(id);
+
+                                        /***********************/
+
+                                        roulette.start(pad(numero,5));
+
+                                        /***********************/
+                                    } else if (data == true) {
+                                        /***********************/
+                                        $('#NumeroCarton').val("");
+                                        $('a[data-id="' + id + '"]').remove();
+                                        roulette.reset();
+                                        /***********************/
+                                    }
+                                },
+                                error: function (ex) {
+                                    alert('Error, por favor intente mas tarde.');
+                                }
+                            });
+                        });
+                    }
+
+                },
+                error: function (ex) {
+                    alert('Error, por favor intente mas tarde.');
+                }
+            });
+        }
+
+        $('#BtnBuscarCarton').click(function () {
+            obtenerNumeros();
+        });
+    }
+
+    initialize();
+</script>
