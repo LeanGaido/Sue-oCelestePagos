@@ -25,6 +25,8 @@ namespace SueñoCelestePagos.Dal
         public DbSet<CuotasPlanDePago> CuotasPlanDePagos { get; set; }
         public DbSet<Debito> Debitos { get; set; }
         public DbSet<FechaDeVencimiento> FechasDeVencimiento { get; set; }
+        public DbSet<FechaLimiteDebito> FechasLimitesDebito { get; set; }
+        public DbSet<Institucion> Instituciones { get; set; }
         public DbSet<ItemPago> ItemsPagos { get; set; }
         public DbSet<Localidad> Localidades { get; set; }
         public DbSet<Pago> Pagos { get; set; }

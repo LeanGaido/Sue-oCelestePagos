@@ -222,17 +222,68 @@
     <script type="text/javascript" src="~/Scripts/bootstrap-select.min.js"></script>
     <script>
         if ($('#TipoDePago').length) {
-            if ($('#TipoDePago').val() == 2 || $('#TipoDePago').val() == 3) {
+            $('#CantCuotas').empty();
+            if ($('#TipoDePago').val() == 2) {
+                $.ajax({
+                    type: "POST",
+                    traditional: true,
+                    async: false,
+                    cache: false,
+                    url: '/Compras/ObtenerCuotasPosiblesJS',
+                    data: {
+
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (i, data) {
+                            $('#CantCuotas').append('<option value="' + data.key + '">' + data.key + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Error, por favor intente mas tarde.');
+                    }
+                });
                 $('#SelectCantCuotas').show();
-            } else {
+            } else if ($('#TipoDePago').val() == 3) {
+                $.ajax({
+                    type: "POST",
+                    traditional: true,
+                    async: false,
+                    cache: false,
+                    url: '/Compras/ObtenerCuotasDebitoPosiblesJS',
+                    data: {
+
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (i, data) {
+                            $('#CantCuotas').append('<option value="' + data.key + '">' + data.key + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                    alert('Error, por favor intente mas tarde.');
+                    }
+                });
+                $('#SelectCantCuotas').show();
+            }else {
                 $('#SelectCantCuotas').hide();
             }
 
             $('#TipoDePago').change(function () {
-                if ($('#TipoDePago').val() == 2 || $('#TipoDePago').val() == 3) {
+                //if ($('#TipoDePago').val() == 2 || $('#TipoDePago').val() == 3) {
+                //    $('#SelectCantCuotas').show();
+                //} else {
+                //    $('#SelectCantCuotas').hide();
+                //}
+                if ($('#TipoDePago').val() == 2) {
                     $('#SelectCantCuotas').show();
+                    $('#SelectCantCuotasDebito').hide();
+                } else if ($('#TipoDePago').val() == 3) {
+                    $('#SelectCantCuotas').hide();
+                    $('#SelectCantCuotasDebito').show();
                 } else {
                     $('#SelectCantCuotas').hide();
+                    $('#SelectCantCuotasDebito').hide();
                 }
             });
         }

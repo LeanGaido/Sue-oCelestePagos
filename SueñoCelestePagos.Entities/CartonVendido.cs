@@ -36,15 +36,7 @@ namespace SueñoCelestePagos.Entities
 
         public int? CantCuotas { get; set; }
 
-        //[ForeignKey("PlanDePago")]
-        //public int PlanDePagoID { get; set; }
-
-        //public virtual PlanDePago PlanDePago { get; set; }
-
-        //[ForeignKey("PlanDePago")]
-        //public int? PagoID { get; set; }
-
-        //public virtual PlanDePago PlanDePago { get; set; }
+        public int? EntidadID { get; set; }
 
         [NotMapped]
         public string CheckoutUrl { get; set; }

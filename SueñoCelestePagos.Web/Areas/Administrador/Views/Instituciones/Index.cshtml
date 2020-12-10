@@ -1,9 +1,8 @@
-﻿@model PagedList.IPagedList<SueñoCelestePagos.Entities.FechaDeVencimiento>
-@using PagedList.Mvc;
+﻿@model IEnumerable<SueñoCelestePagos.Entities.Institucion>
+
 @{
     ViewBag.Title = "Index";
 }
-
 
 <!--BEGIN TITLE & BREADCRUMB PAGE-->
 <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
@@ -42,7 +41,7 @@
 <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb" style="border-top:5px solid #e5e5e5">
     <div class="page-header pull-right">
         <div class="page-title">
-            <a href="@Url.Action("Create", "FechasDeVencimientos")" class="btn btn-primary">Agregar Nueva Fecha De Vencimiento</a>
+            <a href="@Url.Action("Create", "Instituciones")" class="btn btn-primary">Agregar Nueva Institucion</a>
         </div>
     </div>
     <div class="clearfix">
@@ -57,16 +56,16 @@
             <table class="table">
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.First().Mes)
+                        @Html.DisplayNameFor(model => model.Nombre)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.First().Año)
+                        @Html.DisplayNameFor(model => model.Cuit)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.First().PrimerVencimiento)
+                        @Html.DisplayNameFor(model => model.Domicilio)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.First().SegundoVencimiento)
+                        @Html.DisplayNameFor(model => model.Telefono)
                     </th>
                     <th></th>
                 </tr>
@@ -75,16 +74,16 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Mes)
+                            @Html.DisplayFor(modelItem => item.Nombre)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Año)
+                            @Html.DisplayFor(modelItem => item.Cuit)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.PrimerVencimiento)
+                            @Html.DisplayFor(modelItem => item.Domicilio)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.SegundoVencimiento)
+                            @Html.DisplayFor(modelItem => item.Telefono)
                         </td>
                         <td>
                             @Html.ActionLink("Editar", "Edit", new { id = item.ID }) |
@@ -96,12 +95,7 @@
 
             </table>
 
-            <div class="text-center">
-                Pagina @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
-
-                @Html.PagedListPager(Model, page => Url.Action("Index",
-                    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
-            </div>
+            
         }
         else
         {
@@ -116,8 +110,3 @@
     </div>
 </div>
 <!--END CONTENT-->
-
-
-@*<p>
-    @Html.ActionLink("Create New", "Create")
-</p>*@

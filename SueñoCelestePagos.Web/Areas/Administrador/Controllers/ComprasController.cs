@@ -486,6 +486,14 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
                             pagoCarton.Pagado = true;
                             pagoCarton.FechaDePago = DateTime.Now;
                             pagoCarton.Pago = pago.first_total;
+
+                            if (pagoCarton.CuotaPlanID != 0)
+                            {
+                                var CuotaPlan = db.CuotasPlanDePagos.Where(x => x.ID == pagoCarton.CuotaPlanID).FirstOrDefault();
+
+                                CuotaPlan.CuotaPagada = true;
+                                CuotaPlan.PagoID = pagoID;
+                            }
                         }
 
                         var CartonComprado = db.CartonesVendidos.Where(x => x.ID == pagoCarton.CartonVendidoID).FirstOrDefault();

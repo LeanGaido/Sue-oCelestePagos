@@ -1,9 +1,8 @@
-﻿@model PagedList.IPagedList<SueñoCelestePagos.Entities.FechaDeVencimiento>
+﻿@model PagedList.IPagedList<SueñoCelestePagos.Entities.FechaLimiteDebito>
 @using PagedList.Mvc;
 @{
     ViewBag.Title = "Index";
 }
-
 
 <!--BEGIN TITLE & BREADCRUMB PAGE-->
 <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
@@ -42,7 +41,7 @@
 <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb" style="border-top:5px solid #e5e5e5">
     <div class="page-header pull-right">
         <div class="page-title">
-            <a href="@Url.Action("Create", "FechasDeVencimientos")" class="btn btn-primary">Agregar Nueva Fecha De Vencimiento</a>
+            <a href="@Url.Action("Create", "FechasLimitesDebito")" class="btn btn-primary">Agregar Nueva Fecha De Vencimiento</a>
         </div>
     </div>
     <div class="clearfix">
@@ -57,16 +56,13 @@
             <table class="table">
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.First().Mes)
+                        @Html.DisplayName("Mes")
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.First().Año)
+                        @Html.DisplayName("Año")
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.First().PrimerVencimiento)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.First().SegundoVencimiento)
+                        @Html.DisplayName("Fecha Limite")
                     </th>
                     <th></th>
                 </tr>
@@ -81,10 +77,7 @@
                             @Html.DisplayFor(modelItem => item.Año)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.PrimerVencimiento)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.SegundoVencimiento)
+                            @Html.DisplayFor(modelItem => item.FechaLimite)
                         </td>
                         <td>
                             @Html.ActionLink("Editar", "Edit", new { id = item.ID }) |
@@ -116,8 +109,6 @@
     </div>
 </div>
 <!--END CONTENT-->
-
-
 @*<p>
-    @Html.ActionLink("Create New", "Create")
+        @Html.ActionLink("Create New", "Create")
 </p>*@

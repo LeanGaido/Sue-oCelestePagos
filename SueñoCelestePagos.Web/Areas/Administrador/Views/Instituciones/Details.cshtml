@@ -1,0 +1,76 @@
+﻿@model SueñoCelestePagos.Entities.Institucion
+
+@{
+    ViewBag.Title = "Institucion " + Model.Nombre;
+}
+<!--BEGIN TITLE & BREADCRUMB PAGE-->
+<div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
+    <div class="page-header pull-left">
+        <div class="page-title">
+            INSTITUTUCIONES
+        </div>
+    </div>
+    <ol class="breadcrumb page-breadcrumb pull-right">
+        <li><i class="fa fa-home"></i>&nbsp;<a href="@Url.Action("Index","Home")">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+        <li class="hidden"><a href="#"></a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+        <li class="active">Principal</li>
+    </ol>
+    <div class="clearfix">
+    </div>
+</div>
+<!--END TITLE & BREADCRUMB PAGE-->
+<!--BEGIN CONTENT-->
+<div class="page-content">
+    <div id="tab-general">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="text-center">Fechas De Vencimiento</h3>
+                </div>
+                <div class="panel-body">
+                    <div>
+                        <hr />
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Nombre)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Nombre)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Cuit)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Cuit)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Domicilio)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Domicilio)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Telefono)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Telefono)
+                            </dd>
+
+                        </dl>
+                    </div>
+                    <p>
+                        @Html.ActionLink("Editar", "Edit", new { id = Model.ID }) |
+                        @Html.ActionLink("Volver", "Index")
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,14 +1,14 @@
-﻿@model SueñoCelestePagos.Entities.FechaDeVencimiento
+﻿@model SueñoCelestePagos.Entities.Institucion
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Eliminar Institucion";
 }
 
 <!--BEGIN TITLE & BREADCRUMB PAGE-->
 <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
     <div class="page-header pull-left">
         <div class="page-title">
-            Fechas de Vencimientos
+            INSTITUTUCIONES
         </div>
     </div>
     <ol class="breadcrumb page-breadcrumb pull-right">
@@ -32,39 +32,39 @@
                     <h3 class="text-center"></h3>
                 </div>
                 <div class="panel-body">
-                    <h3>¿Estas seguro de querer Eliminar esta fecha?</h3>
+                    <h3>¿Estas seguro de querer Eliminar esta Institucion?</h3>
                     <hr />
                     <dl class="dl-horizontal">
                         <dt>
-                            @Html.DisplayNameFor(model => model.Mes)
+                            @Html.DisplayNameFor(model => model.Nombre)
                         </dt>
 
                         <dd>
-                            @Html.DisplayFor(model => model.Mes)
+                            @Html.DisplayFor(model => model.Nombre)
                         </dd>
 
                         <dt>
-                            @Html.DisplayNameFor(model => model.Año)
+                            @Html.DisplayNameFor(model => model.Cuit)
                         </dt>
 
                         <dd>
-                            @Html.DisplayFor(model => model.Año)
+                            @Html.DisplayFor(model => model.Cuit)
                         </dd>
 
                         <dt>
-                            @Html.DisplayNameFor(model => model.PrimerVencimiento)
+                            @Html.DisplayNameFor(model => model.Domicilio)
                         </dt>
 
                         <dd>
-                            @Html.DisplayFor(model => model.PrimerVencimiento)
+                            @Html.DisplayFor(model => model.Domicilio)
                         </dd>
 
                         <dt>
-                            @Html.DisplayNameFor(model => model.SegundoVencimiento)
+                            @Html.DisplayNameFor(model => model.Telefono)
                         </dt>
 
                         <dd>
-                            @Html.DisplayFor(model => model.SegundoVencimiento)
+                            @Html.DisplayFor(model => model.Telefono)
                         </dd>
 
                     </dl>
@@ -75,7 +75,7 @@
 
                         <div class="form-actions no-color">
                             <input type="submit" value="Eliminar" class="btn btn-default" /> |
-                            @Html.ActionLink("Back to List", "Index")
+                            @Html.ActionLink("Volver", "Index")
                         </div>
                     }
                 </div>

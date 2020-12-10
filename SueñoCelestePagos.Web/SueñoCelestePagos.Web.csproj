@@ -238,7 +238,9 @@
     <Compile Include="Areas\Administrador\Controllers\ClientesController.cs" />
     <Compile Include="Areas\Administrador\Controllers\ComprasController.cs" />
     <Compile Include="Areas\Administrador\Controllers\FechasDeVencimientosController.cs" />
+    <Compile Include="Areas\Administrador\Controllers\FechasLimitesDebitoController.cs" />
     <Compile Include="Areas\Administrador\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Administrador\Controllers\InstitucionesController.cs" />
     <Compile Include="Areas\Administrador\Controllers\LoginController.cs" />
     <Compile Include="Areas\Administrador\Models\AdministradorAuthorize.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -2483,6 +2485,16 @@
     <Content Include="Areas\Administrador\Views\Compras\VentasACancelar.cshtml" />
     <Content Include="Areas\Administrador\Views\Compras\CancelarVenta.cshtml" />
     <Content Include="Areas\Administrador\Views\Compras\UploadFile.cshtml" />
+    <Content Include="Areas\Administrador\Views\Instituciones\Create.cshtml" />
+    <Content Include="Areas\Administrador\Views\Instituciones\Delete.cshtml" />
+    <Content Include="Areas\Administrador\Views\Instituciones\Details.cshtml" />
+    <Content Include="Areas\Administrador\Views\Instituciones\Edit.cshtml" />
+    <Content Include="Areas\Administrador\Views\Instituciones\Index.cshtml" />
+    <Content Include="Areas\Administrador\Views\FechasLimitesDebito\Create.cshtml" />
+    <Content Include="Areas\Administrador\Views\FechasLimitesDebito\Delete.cshtml" />
+    <Content Include="Areas\Administrador\Views\FechasLimitesDebito\Details.cshtml" />
+    <Content Include="Areas\Administrador\Views\FechasLimitesDebito\Edit.cshtml" />
+    <Content Include="Areas\Administrador\Views\FechasLimitesDebito\Index.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\i18n\defaults-zh_TW.min.js" />
