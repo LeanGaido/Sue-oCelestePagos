@@ -16,6 +16,7 @@ using SueñoCelestePagos.Entities.Pago360.Response;
 using System.Text;
 using SueñoCelestePagos.Web.Areas.Administrador.Models;
 using SueñoCelestePagos.Entities.Pago360;
+using Ganss.Excel;
 
 namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
 {
@@ -41,7 +42,8 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
             var Compras = db.CartonesVendidos.Include(t => t.Carton)
                                              .Include(t => t.Cliente)
                                              .Include(t => t.TipoDePago)
-                                             .Where(x => x.Carton.Año == Año)
+                                             .Where(x => x.Carton.Año == Año && x.PagoCancelado == false)
+                                             .OrderByDescending(x => x.FechaVenta)
                                              .ToList();
 
             return View(Compras.ToPagedList(page,15));
@@ -361,7 +363,50 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
 
             db.SaveChanges();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("VentasACancelar");
+        }
+
+        /*****************************************************************************************/
+
+        public FileContentResult Compras(int? Mes, int? Año)
+        {
+            List<CartonVendido> CartonesVendido = new List<CartonVendido>();
+
+            string newFile = "";
+
+            if (Mes != null && Año != null)
+            {
+                CartonesVendido = db.CartonesVendidos.Where(x => x.PagoRealizdo == true &&
+                                                                 x.FechaPago.Month == Mes &&
+                                                                 x.FechaPago.Year == Año).ToList();
+                newFile = Server.MapPath("~/Archivos/Exportacion/compras/compras" + Mes + Año + ".xlsx");
+            }
+            else
+            {
+                return null;
+            }
+
+            var compras = (from oCompras in CartonesVendido
+                           select new
+                           {
+                               oCompras.Carton.Numero,
+                               oCompras.Cliente.NombreCompleto,
+                               oCompras.Cliente.Dni,
+                               oCompras.Cliente.Celular,
+                               oCompras.Cliente.Email,
+                               oCompras.FechaVenta,
+                               oCompras.FechaPago
+                           }).ToList();
+
+            ExcelMapper mapper = new ExcelMapper();
+
+            mapper.Save(newFile, compras, "SheetName", true);
+
+            String mimeType = MimeMapping.GetMimeMapping(newFile);
+
+            byte[] stream = System.IO.File.ReadAllBytes(newFile);
+
+            return File(stream, mimeType);
         }
 
         /*****************************************************************************************/
@@ -401,6 +446,54 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
                     db.SaveChanges();
                 }
             }
+        }
+
+        public void ActualizarCompras()
+        {
+            var Compras = db.CartonesVendidos.Where(x => x.PagoCancelado == false && x.PagoRealizdo == false).ToList();
+
+            foreach (var compra in Compras)
+            {
+                var PagosCompra = db.PagosCartonesVendidos.Where(x => x.CartonVendidoID == compra.ID).ToList();
+                decimal pagos = 0;
+                foreach (var pagoCompra in PagosCompra)
+                {
+                    string pagoCompraID = pagoCompra.ID.ToString();
+                    if (pagoCompra.Pagado)
+                    {
+                        pagos += pagoCompra.Pago;
+
+                        if (Decimal.Parse(compra.Carton.Precio.ToString()) == pagos)
+                        {
+                            compra.PagoRealizdo = true;
+                            compra.FechaPago = DateTime.Now;
+                            compra.Pagos = pagos;
+                        }
+                    }
+                    else
+                    {
+                        var pago360 = db.Pagos.Where(x => x.external_reference == pagoCompraID).FirstOrDefault();
+                        if (pago360.state == "paid")
+                        {
+                            pagoCompra.Pagado = true;
+                            pagoCompra.FechaDePago = DateTime.Now;
+                            pagoCompra.Pago = pago360.first_total;
+
+                            pagos += pago360.first_total;
+                            //compra.Pagos += 
+
+                            if (Decimal.Parse(compra.Carton.Precio.ToString()) == pagos)
+                            {
+                                compra.PagoRealizdo = true;
+                                compra.FechaPago = DateTime.Now;
+                                compra.Pagos = pagos;
+                            }
+                        }
+                    }
+                }
+            }
+
+            db.SaveChanges();
         }
 
         /*****************************************************************************************/

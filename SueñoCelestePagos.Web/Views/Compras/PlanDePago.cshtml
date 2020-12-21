@@ -44,7 +44,14 @@
                                     }
                                     else
                                     {
-                                        <a class="btn btn-success disabled">Cuota Vencida</a>
+                                        if (Model.Last() == cuota)
+                                        {
+                                            <a href="@Url.Action("PagarCuota", "Compras", new { cuota = cuota.ID })" class="btn btn-success">Pagar</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success disabled">Cuota Vencida</a>
+                                        }
                                     }
                                 </div>
                             </div>

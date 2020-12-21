@@ -90,6 +90,70 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
             return View(institucion);
         }
 
+        public ActionResult Aporte(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Institucion institucion = db.Instituciones.Find(id);
+            if (institucion == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(institucion);
+        }
+
+        [HttpPost]
+        public ActionResult Aporte(int? id, decimal Aporte, DateTime FechaAlta, DateTime? FechaBaja)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Institucion institucion = db.Instituciones.Find(id);
+            if (institucion == null)
+            {
+                return HttpNotFound();
+            }
+
+            if(Aporte < 1)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var AporteVigente = db.AporteInstitucion.Where(x => x.InstitucionID == id && x.FechaBaja != null).FirstOrDefault();
+            if(AporteVigente == null)
+            {
+                AporteVigente = new AporteInstitucion();
+
+                AporteVigente.InstitucionID = id.Value;
+                AporteVigente.PorcAporte = Aporte;
+                AporteVigente.FechaAlta = FechaAlta;
+                AporteVigente.FechaBaja = FechaBaja;
+
+                db.AporteInstitucion.Add(AporteVigente);
+            }
+            else
+            {
+                AporteVigente.FechaBaja = FechaAlta.AddDays(-1);
+
+                AporteInstitucion NuevoAporte = new AporteInstitucion();
+
+                NuevoAporte.InstitucionID = id.Value;
+                NuevoAporte.PorcAporte = Aporte;
+                NuevoAporte.FechaAlta = FechaAlta;
+                NuevoAporte.FechaBaja = FechaBaja;
+
+                db.AporteInstitucion.Add(NuevoAporte);
+            }
+
+            db.SaveChanges();
+
+            return View();
+        }
+
         // GET: Administrador/Instituciones/Delete/5
         public ActionResult Delete(int? id)
         {

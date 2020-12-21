@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adhesion.cs" />
+    <Compile Include="AporteInstitucion.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="CartonReservado.cs" />
     <Compile Include="CodigoTelefono.cs" />

@@ -31,10 +31,10 @@ namespace SueñoCelestePagos.Utilities
         public string EnviarSms()
         {
             //Test sin enviar SMS
-            //Uri uri = new Uri("http://servicio.smsmasivos.com.ar/enviar_sms.asp?TEST=1&API=1&USUARIO=" + HttpUtility.UrlEncode(usuario) + "&CLAVE=" + HttpUtility.UrlEncode(clave) + "&TOS=" + HttpUtility.UrlEncode(numero) + "&TEXTO=" + HttpUtility.UrlEncode(texto));
+            Uri uri = new Uri("http://servicio.smsmasivos.com.ar/enviar_sms.asp?TEST=1&API=1&USUARIO=" + HttpUtility.UrlEncode(usuario) + "&CLAVE=" + HttpUtility.UrlEncode(clave) + "&TOS=" + HttpUtility.UrlEncode(numero) + "&TEXTO=" + HttpUtility.UrlEncode(texto));
 
             //Test enviando realmente un SMS
-            Uri uri = new Uri("http://servicio.smsmasivos.com.ar/enviar_sms.asp?API=1&USUARIO=" + HttpUtility.UrlEncode(usuario) + "&CLAVE=" + HttpUtility.UrlEncode(clave) + "&TOS=" + HttpUtility.UrlEncode(numero) + "&TEXTO=" + HttpUtility.UrlEncode(texto));
+            //Uri uri = new Uri("http://servicio.smsmasivos.com.ar/enviar_sms.asp?API=1&USUARIO=" + HttpUtility.UrlEncode(usuario) + "&CLAVE=" + HttpUtility.UrlEncode(clave) + "&TOS=" + HttpUtility.UrlEncode(numero) + "&TEXTO=" + HttpUtility.UrlEncode(texto));
 
             HttpWebRequest requestFile = (HttpWebRequest)WebRequest.Create(uri);
             

@@ -307,13 +307,13 @@ namespace SueñoCelestePagos.Web.Controllers
 
             ViewBag.CantCuotasDebito = new SelectList(cuotasDebito, "key", "value");
 
-            ViewBag.TipoDePago = new SelectList(db.TiposDePago, "ID", "Descripcion");
+            ViewBag.TipoDePago = new SelectList(db.TiposDePago.Where(x => x.Activo), "ID", "Descripcion");
 
             return View();
         }
 
         [HttpPost]
-        public ActionResult Index(int TipoDePago, int CantCuotas = 0)
+        public ActionResult Index(int TipoDePago, int InstitucionId, int CantCuotas = 0)
         {
             int CartonVendidoId = 0, PagoCartonId = 0;
             int[] CuotasPlanDePagoId = new int[CantCuotas];
@@ -357,6 +357,7 @@ namespace SueñoCelestePagos.Web.Controllers
             cartonVendido.TipoDePagoID = TipoDePago;
             cartonVendido.FechaVenta = hoy;
             cartonVendido.CantCuotas = CantCuotas;
+            cartonVendido.EntidadID = InstitucionId;
 
             db.CartonesVendidos.Add(cartonVendido);
             db.SaveChanges();
@@ -380,10 +381,16 @@ namespace SueñoCelestePagos.Web.Controllers
 
                 var FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
 
-                if (hoy.Day > FechaDeVencimiento.PrimerVencimiento.Day)
+                if (hoy.Month == 12 && hoy.Day > FechaDeVencimiento.PrimerVencimiento.Day)
                 {
-                    FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == (hoy.Month + 1) && x.Año == hoy.Year).FirstOrDefault();
+                    hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
+                    FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
                 }
+
+                //if (hoy.Day > FechaDeVencimiento.PrimerVencimiento.Day)
+                //{
+                //    FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == (hoy.Month + 1) && x.Año == hoy.Year).FirstOrDefault();
+                //}
 
                 var numeroCarton = db.Cartones.Where(x => x.ID == cartonReservado.CartonID).FirstOrDefault();
 
@@ -441,10 +448,16 @@ namespace SueñoCelestePagos.Web.Controllers
 
                 var FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
 
-                if (hoy.AddDays(4) >= FechasDeVencimiento.PrimerVencimiento)
+                if (hoy.Month == 12 && hoy.Day > FechasDeVencimiento.PrimerVencimiento.Day)
                 {
-                    FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month + 1 && x.Año == hoy.Year).FirstOrDefault();
+                    hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
+                    FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
                 }
+
+                //if (hoy.Day > FechaDeVencimiento.PrimerVencimiento.Day)
+                //{
+                //    FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == (hoy.Month + 1) && x.Año == hoy.Year).FirstOrDefault();
+                //}
 
                 int MesCuota = FechasDeVencimiento.PrimerVencimiento.Month;
 
@@ -743,8 +756,10 @@ namespace SueñoCelestePagos.Web.Controllers
             var CartonComprado = db.CartonesVendidos.AsNoTracking().Include(t => t.Carton).Where(x => x.ClienteID == Cliente.ID && x.FechaVenta.Year == hoy.Year && x.PagoCancelado == false).FirstOrDefault();
 
             var CuotaCarton = db.CuotasPlanDePagos.Where(x => x.ID == cuota && x.CartonVendidoID == CartonComprado.ID).FirstOrDefault();
-            
-            if (CuotaCarton.PagoID == 0)
+
+            var Pago = db.Pagos.Where(x => x.id == CuotaCarton.PagoID).FirstOrDefault();
+
+            if (Pago == null || pago.state == "expired")
             {
                 var CuotaVencida = db.CuotasPlanDePagos.Where(x => x.CartonVendidoID == CartonComprado.ID && x.MesCuota == CuotaCarton.MesCuota - 1 && x.CuotaPagada == false).FirstOrDefault();
 
@@ -827,8 +842,6 @@ namespace SueñoCelestePagos.Web.Controllers
                 {
                     return RedirectToAction("PlanDePago");
                 }
-
-                var Pago = db.Pagos.Where(x => x.id == CuotaCarton.PagoID).FirstOrDefault();
 
                 return Redirect(Pago.checkout_url);
             }
@@ -1355,7 +1368,7 @@ namespace SueñoCelestePagos.Web.Controllers
 
                         CartonComprado.Pagos += pago.first_total;
 
-                        if(Decimal.Parse(CartonComprado.Carton.Precio.ToString()) - 1 >= CartonComprado.Pagos)
+                        if(Decimal.Parse(CartonComprado.Carton.Precio.ToString()) - 1 <= CartonComprado.Pagos)
                         {
                             CartonComprado.PagoRealizdo = true;
                             CartonComprado.FechaPago = DateTime.Now;
@@ -1461,10 +1474,16 @@ namespace SueñoCelestePagos.Web.Controllers
 
             var FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
 
-            if(hoy.AddDays(4) >= FechasDeVencimiento.PrimerVencimiento)
+            if (hoy.Month == 12 && hoy.Day >= FechasDeVencimiento.PrimerVencimiento.Day)
             {
-                FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month + 1 && x.Año == hoy.Year).FirstOrDefault();
+                hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
+                FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
             }
+
+            //if (hoy >= FechasDeVencimiento.PrimerVencimiento)
+            //{
+            //    FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month + 1 && x.Año == hoy.Year).FirstOrDefault();
+            //}
 
             for (int mes = FechasDeVencimiento.PrimerVencimiento.Month; mes <= CantCuotasPosibles; mes++)
             {
@@ -1490,10 +1509,16 @@ namespace SueñoCelestePagos.Web.Controllers
 
             var FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
 
-            if (hoy.AddDays(4) >= FechasDeVencimiento.PrimerVencimiento)
+            if (hoy.Month == 12 && hoy.Day >= FechasDeVencimiento.PrimerVencimiento.Day)
             {
-                FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month + 1 && x.Año == hoy.Year).FirstOrDefault();
+                hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
+                FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
             }
+
+            //if (hoy >= FechasDeVencimiento.PrimerVencimiento)
+            //{
+            //    FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month + 1 && x.Año == hoy.Year).FirstOrDefault();
+            //}
 
             for (int mes = FechasDeVencimiento.PrimerVencimiento.Month; mes <= CantCuotasPosibles; mes++)
             {
@@ -1521,10 +1546,16 @@ namespace SueñoCelestePagos.Web.Controllers
             //var FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
             var FechasDeVencimiento = db.FechasLimitesDebito.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
 
-            if (hoy >= FechasDeVencimiento.FechaLimite)
+            if (hoy.Month == 12 && hoy.Day >= FechasDeVencimiento.FechaLimite.Day)
             {
-                FechasDeVencimiento = db.FechasLimitesDebito.Where(x => x.Mes == hoy.Month + 1 && x.Año == hoy.Year).FirstOrDefault();
+                hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
+                FechasDeVencimiento = db.FechasLimitesDebito.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
             }
+
+            //if (hoy >= FechasDeVencimiento.PrimerVencimiento)
+            //{
+            //    FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month + 1 && x.Año == hoy.Year).FirstOrDefault();
+            //}
 
             for (int mes = FechasDeVencimiento.FechaLimite.Month; mes <= CantCuotasPosibles; mes++)
             {
@@ -1551,10 +1582,16 @@ namespace SueñoCelestePagos.Web.Controllers
             //var FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
             var FechasDeVencimiento = db.FechasLimitesDebito.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
 
-            if (hoy >= FechasDeVencimiento.FechaLimite)
+            if (hoy.Month == 12 && hoy.Day >= FechasDeVencimiento.FechaLimite.Day)
             {
-                FechasDeVencimiento = db.FechasLimitesDebito.Where(x => x.Mes == hoy.Month + 1 && x.Año == hoy.Year).FirstOrDefault();
+                hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
+                FechasDeVencimiento = db.FechasLimitesDebito.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
             }
+
+            //if (hoy >= FechasDeVencimiento.PrimerVencimiento)
+            //{
+            //    FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month + 1 && x.Año == hoy.Year).FirstOrDefault();
+            //}
 
             for (int mes = FechasDeVencimiento.FechaLimite.Month; mes <= CantCuotasPosibles; mes++)
             {
@@ -1565,6 +1602,25 @@ namespace SueñoCelestePagos.Web.Controllers
 
                 cuotas.Add(cuota);
                 c++;
+            }
+
+            return Json(cuotas, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult ObtenerInstituciones()
+        {
+            List<Cuotas> cuotas = new List<Cuotas>();
+
+            var Instituciones = db.Instituciones.ToList();
+
+            foreach (var Institucion in Instituciones)
+            {
+                var cuota = new Cuotas();
+
+                cuota.key = Institucion.ID;
+                cuota.value = Institucion.Nombre;
+
+                cuotas.Add(cuota);
             }
 
             return Json(cuotas, JsonRequestBehavior.AllowGet);
@@ -1590,6 +1646,15 @@ namespace SueñoCelestePagos.Web.Controllers
         public List<Carton> ObtenerCartonesDisponibles(int? SearchType, string SearchString)
         {
             DateTime hoy = DateTime.Now;
+
+            int año = hoy.Year;
+
+            var FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
+
+            if (hoy.Month == 12 && hoy.Day > FechaDeVencimiento.PrimerVencimiento.Day)
+            {
+                hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
+            }
 
             var compra = db.CartonesVendidos.Include(t => t.Carton).Where(x => x.Carton.Año == hoy.Year).ToList();
 
