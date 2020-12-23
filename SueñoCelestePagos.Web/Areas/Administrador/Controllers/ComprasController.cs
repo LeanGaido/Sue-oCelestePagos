@@ -366,6 +366,66 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
             return RedirectToAction("VentasACancelar");
         }
 
+        public ActionResult CancelarVentas(int Dias)
+        {
+            int Año = DateTime.Today.Year;
+            DateTime hoy = DateTime.Today;
+            List<CartonVendido> ComprasACancelar = new List<CartonVendido>();
+
+            var Pagos = db.PagosCartonesVendidos.ToList();
+
+            var Compras = db.CartonesVendidos.Where(x => x.PagoCancelado == false &&
+                                                         x.PagoRealizdo == false)
+                                             .ToList();
+
+            Compras = Compras.Where(x => !Pagos.Any(y => y.CartonVendidoID == x.ID) ||
+                                         Pagos.Any(y => y.CartonVendidoID == x.ID && y.Pagado == false)).ToList();
+
+            foreach (var compra in Compras)
+            {
+                compra.DiasDesdeLaVenta = (hoy - compra.FechaVenta).Days;
+
+                if (compra.DiasDesdeLaVenta >= Dias)
+                {
+                    ComprasACancelar.Add(compra);
+                }
+            }
+
+            return View(ComprasACancelar);
+        }
+
+        [HttpPost]
+        [ActionName("CancelarVentas")]
+        public ActionResult CancelarVentasConfirmed(int Dias)
+        {
+            int Año = DateTime.Today.Year;
+            DateTime hoy = DateTime.Today;
+            List<CartonVendido> ComprasACancelar = new List<CartonVendido>();
+
+            var Pagos = db.PagosCartonesVendidos.ToList();
+
+            var Compras = db.CartonesVendidos.Where(x => x.PagoCancelado == false &&
+                                                         x.PagoRealizdo == false)
+                                             .ToList();
+
+            Compras = Compras.Where(x => !Pagos.Any(y => y.CartonVendidoID == x.ID) ||
+                                         Pagos.Any(y => y.CartonVendidoID == x.ID && y.Pagado == false)).ToList();
+
+            foreach (var compra in Compras)
+            {
+                compra.DiasDesdeLaVenta = (hoy - compra.FechaVenta).Days;
+
+                if (compra.DiasDesdeLaVenta >= Dias)
+                {
+                    compra.PagoCancelado = true;
+                }
+            }
+
+            db.SaveChanges();
+
+            return RedirectToAction("VentasACancelar");
+        }
+
         /*****************************************************************************************/
 
         public FileContentResult Compras(int? Mes, int? Año)
@@ -377,8 +437,8 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
             if (Mes != null && Año != null)
             {
                 CartonesVendido = db.CartonesVendidos.Where(x => x.PagoRealizdo == true &&
-                                                                 x.FechaPago.Month == Mes &&
-                                                                 x.FechaPago.Year == Año).ToList();
+                                                                 x.FechaPago.Value.Month == Mes &&
+                                                                 x.FechaPago.Value.Year == Año).ToList();
                 newFile = Server.MapPath("~/Archivos/Exportacion/compras/compras" + Mes + Año + ".xlsx");
             }
             else
