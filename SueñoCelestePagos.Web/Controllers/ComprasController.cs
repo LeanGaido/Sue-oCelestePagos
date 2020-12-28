@@ -347,149 +347,157 @@ namespace SueñoCelestePagos.Web.Controllers
             {
                 return RedirectToAction("ErrorCompra", new { MensajeError = "La Reserva del Carton Expiro" });
             }
-
-            var Carton = db.Cartones.Where(x => x.ID == cartonReservado.CartonID && x.Año == hoy.Year).FirstOrDefault();
-            
-            CartonVendido cartonVendido = new CartonVendido();
-
-            cartonVendido.CartonID = Carton.ID;
-            cartonVendido.ClienteID = Cliente.ID;
-            cartonVendido.TipoDePagoID = TipoDePago;
-            cartonVendido.FechaVenta = hoy;
-            cartonVendido.CantCuotas = CantCuotas;
-            cartonVendido.EntidadID = InstitucionId;
-
-            db.CartonesVendidos.Add(cartonVendido);
-            db.SaveChanges();
-
-            CartonVendidoId = cartonVendido.ID;
-
-            if (cartonVendido.TipoDePagoID == 1)
+            try
             {
-                PagoCartonVendido pagoCarton = new PagoCartonVendido();
+                var Carton = db.Cartones.Where(x => x.ID == cartonReservado.CartonID && x.Año == hoy.Year).FirstOrDefault();
 
-                pagoCarton.CartonVendidoID = cartonVendido.ID;
-                pagoCarton.TipoDePagoID = 1;
-                pagoCarton.FechaDePago = hoy;
+                CartonVendido cartonVendido = new CartonVendido();
 
-                db.PagosCartonesVendidos.Add(pagoCarton);
+                cartonVendido.CartonID = Carton.ID;
+                cartonVendido.ClienteID = Cliente.ID;
+                cartonVendido.TipoDePagoID = TipoDePago;
+                cartonVendido.FechaVenta = hoy;
+                cartonVendido.CantCuotas = CantCuotas;
+                cartonVendido.EntidadID = InstitucionId;
+
+                db.CartonesVendidos.Add(cartonVendido);
                 db.SaveChanges();
 
-                PagoCartonId = pagoCarton.ID;
+                CartonVendidoId = cartonVendido.ID;
 
-                Pago360Request pago360 = new Pago360Request();
-
-                var FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
-
-                if (hoy.Month == 12 && hoy.Day > FechaDeVencimiento.PrimerVencimiento.Day)
+                if (cartonVendido.TipoDePagoID == 1)
                 {
-                    hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
-                    FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
+                    PagoCartonVendido pagoCarton = new PagoCartonVendido();
+
+                    pagoCarton.CartonVendidoID = cartonVendido.ID;
+                    pagoCarton.TipoDePagoID = 1;
+                    pagoCarton.FechaDePago = hoy;
+
+                    db.PagosCartonesVendidos.Add(pagoCarton);
+                    db.SaveChanges();
+
+                    PagoCartonId = pagoCarton.ID;
+
+                    Pago360Request pago360 = new Pago360Request();
+
+                    var FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
+
+                    if (hoy.Month == 12 && hoy > FechaDeVencimiento.PrimerVencimiento)
+                    {
+                        hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
+                        FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
+                    }
+
+                    //if (hoy.Day > FechaDeVencimiento.PrimerVencimiento.Day)
+                    //{
+                    //    FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == (hoy.Month + 1) && x.Año == hoy.Year).FirstOrDefault();
+                    //}
+
+                    var numeroCarton = db.Cartones.Where(x => x.ID == cartonReservado.CartonID).FirstOrDefault();
+
+                    pago360.description = "Pago Total del Carton Nro°: " + numeroCarton.Numero;
+                    pago360.first_due_date = FechaDeVencimiento.PrimerVencimiento.ToString("dd-MM-yyyy");
+                    pago360.first_total = Carton.Precio;
+                    pago360.second_due_date = FechaDeVencimiento.SegundoVencimiento.ToString("dd-MM-yyyy");
+                    pago360.second_total = Carton.Precio;
+                    pago360.payer_name = Cliente.NombreCompleto;
+                    pago360.external_reference = pagoCarton.ID.ToString();//cartonVendido.ID.ToString();
+                    pago360.payer_email = Cliente.Email;
+                    pago360.back_url_success = url + "/PagoRealizado";
+                    pago360.back_url_pending = url + "/PagoPendiente";
+                    pago360.back_url_rejected = url + "/PagoCancelado";
+                    //pago360.excluded_channels = new string[] { "credit_card" };
+                    try
+                    {
+                        pago = Pagar(pago360);
+
+                        db.Pagos.Add(pago);
+
+                        //cartonVendido.PagoID = pago.id;
+
+                        //pagoCarton.PagoID = pago.id;
+                        //pagoCarton.Pago = pago.first_total;
+
+                        var ReservaCarton = db.CartonesReservados.Where(x => x.ID == CartonReservadoId).FirstOrDefault();
+
+                        db.CartonesReservados.Remove(ReservaCarton);
+
+                        db.SaveChanges();
+
+                        return Redirect(pago.checkout_url);
+                    }
+                    catch (Exception e)
+                    {
+                        if (PagoCartonId != 0)
+                        {
+                            db.PagosCartonesVendidos.Remove(pagoCarton);
+                        }
+
+                        if (CartonVendidoId != 0)
+                        {
+                            db.CartonesVendidos.Remove(cartonVendido);
+                        }
+                        db.SaveChanges();
+                        return RedirectToAction("ErrorCompra", new { MensajeError = "Ocurrio un Error, Por Favor intente mas tarde" });
+                    }
                 }
-
-                //if (hoy.Day > FechaDeVencimiento.PrimerVencimiento.Day)
-                //{
-                //    FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == (hoy.Month + 1) && x.Año == hoy.Year).FirstOrDefault();
-                //}
-
-                var numeroCarton = db.Cartones.Where(x => x.ID == cartonReservado.CartonID).FirstOrDefault();
-
-                pago360.description = "Pago Total del Carton Nro°: " + numeroCarton.Numero;
-                pago360.first_due_date = FechaDeVencimiento.PrimerVencimiento.ToString("dd-MM-yyyy");
-                pago360.first_total = Carton.Precio;
-                pago360.second_due_date = FechaDeVencimiento.SegundoVencimiento.ToString("dd-MM-yyyy");
-                pago360.second_total = Carton.Precio;
-                pago360.payer_name = Cliente.NombreCompleto;
-                pago360.external_reference = pagoCarton.ID.ToString();//cartonVendido.ID.ToString();
-                pago360.payer_email = Cliente.Email;
-                pago360.back_url_success = url + "/PagoRealizado";
-                pago360.back_url_pending = url + "/PagoPendiente";
-                pago360.back_url_rejected = url + "/PagoCancelado";
-                //pago360.excluded_channels = new string[] { "credit_card" };
-                try
+                else if (cartonVendido.TipoDePagoID == 2)//Plan de Pagos Manual
                 {
-                    pago = Pagar(pago360);
-
-                    db.Pagos.Add(pago);
-
-                    //cartonVendido.PagoID = pago.id;
-
-                    //pagoCarton.PagoID = pago.id;
-                    //pagoCarton.Pago = pago.first_total;
-
                     var ReservaCarton = db.CartonesReservados.Where(x => x.ID == CartonReservadoId).FirstOrDefault();
 
                     db.CartonesReservados.Remove(ReservaCarton);
 
-                    db.SaveChanges();
+                    var FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
 
-                    return Redirect(pago.checkout_url);
-                }
-                catch (Exception e)
-                {
-                    if (PagoCartonId != 0)
+                    if (hoy.Month == 12 && hoy > FechasDeVencimiento.PrimerVencimiento)
                     {
-                        db.PagosCartonesVendidos.Remove(pagoCarton);
+                        hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
+                        FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
                     }
 
-                    if (CartonVendidoId != 0)
+                    //if (hoy.Day > FechaDeVencimiento.PrimerVencimiento.Day)
+                    //{
+                    //    FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == (hoy.Month + 1) && x.Año == hoy.Year).FirstOrDefault();
+                    //}
+
+                    int MesCuota = FechasDeVencimiento.Mes;
+
+                    for (int cuota = 1; cuota <= CantCuotas; cuota++)
                     {
-                        db.CartonesVendidos.Remove(cartonVendido);
+                        CuotasPlanDePago cuotaPlanDePago = new CuotasPlanDePago();
+
+                        cuotaPlanDePago.CartonVendidoID = cartonVendido.ID;
+                        cuotaPlanDePago.NroCuota = cuota;
+                        cuotaPlanDePago.MesCuota = MesCuota;
+                        cuotaPlanDePago.AñoCuota = Carton.Año;
+
+                        var vencimientos = db.FechasDeVencimiento.Where(x => x.Mes == MesCuota && x.Año == Carton.Año).FirstOrDefault();
+
+                        cuotaPlanDePago.PrimerVencimiento = vencimientos.PrimerVencimiento;
+                        cuotaPlanDePago.PrimerPrecioCuota = (Carton.Precio / CantCuotas);
+
+                        cuotaPlanDePago.SeguntoVencimiento = vencimientos.SegundoVencimiento;
+                        cuotaPlanDePago.SeguntoPrecioCuota = (Carton.Precio / CantCuotas);
+
+                        db.CuotasPlanDePagos.Add(cuotaPlanDePago);
+                        db.SaveChanges();
+
+                        CuotasPlanDePagoId[cuota - 1] = cuotaPlanDePago.ID;
+                        MesCuota++;
                     }
-                    db.SaveChanges();
-                    return RedirectToAction("ErrorCompra", new { MensajeError = "Ocurrio un Error, Por Favor intente mas tarde" });
+
+                    return RedirectToAction("PlanDePago");
+                }
+                else if (cartonVendido.TipoDePagoID == 3)//Plan de Pagos Debito
+                {
+                    return RedirectToAction("Adherirse", new { CantCuotas });
                 }
             }
-            else if (cartonVendido.TipoDePagoID == 2)//Plan de Pagos Manual
+            catch (Exception e)
             {
-                var ReservaCarton = db.CartonesReservados.Where(x => x.ID == CartonReservadoId).FirstOrDefault();
-
-                db.CartonesReservados.Remove(ReservaCarton);
-
-                var FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
-
-                if (hoy.Month == 12 && hoy.Day > FechasDeVencimiento.PrimerVencimiento.Day)
-                {
-                    hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
-                    FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
-                }
-
-                //if (hoy.Day > FechaDeVencimiento.PrimerVencimiento.Day)
-                //{
-                //    FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == (hoy.Month + 1) && x.Año == hoy.Year).FirstOrDefault();
-                //}
-
-                int MesCuota = FechasDeVencimiento.PrimerVencimiento.Month;
-
-                for (int cuota = 1; cuota <= CantCuotas; cuota++)
-                {
-                    CuotasPlanDePago cuotaPlanDePago = new CuotasPlanDePago();
-
-                    cuotaPlanDePago.CartonVendidoID = cartonVendido.ID;
-                    cuotaPlanDePago.NroCuota = cuota;
-                    cuotaPlanDePago.MesCuota = MesCuota;
-                    cuotaPlanDePago.AñoCuota = Carton.Año;
-
-                    var vencimientos = db.FechasDeVencimiento.Where(x => x.Mes == MesCuota && x.Año == Carton.Año).FirstOrDefault();
-
-                    cuotaPlanDePago.PrimerVencimiento = vencimientos.PrimerVencimiento;
-                    cuotaPlanDePago.PrimerPrecioCuota = (Carton.Precio / CantCuotas);
-
-                    cuotaPlanDePago.SeguntoVencimiento = vencimientos.SegundoVencimiento;
-                    cuotaPlanDePago.SeguntoPrecioCuota = (Carton.Precio / CantCuotas);
-
-                    db.CuotasPlanDePagos.Add(cuotaPlanDePago);
-                    db.SaveChanges();
-
-                    CuotasPlanDePagoId[cuota - 1] = cuotaPlanDePago.ID;
-                    MesCuota++;
-                }
-
-                return RedirectToAction("PlanDePago");
-            }
-            else if (cartonVendido.TipoDePagoID == 3)//Plan de Pagos Debito
-            {
-                return RedirectToAction("Adherirse", new { CantCuotas });
+                var CartonVendido = db.CartonesVendidos.Find(CartonVendidoId);
+                db.SaveChanges();
+                throw;
             }
 
             return View();
@@ -830,9 +838,9 @@ namespace SueñoCelestePagos.Web.Controllers
                     if (PagoCartonId == 0)
                     {
                         db.PagosCartonesVendidos.Remove(pagoCarton);
-                    }
 
-                    db.SaveChanges();
+                        db.SaveChanges();
+                    }
                     return RedirectToAction("ErrorCompra", new { MensajeError = "Ocurrio un Error, Por Favor intente mas tarde" });
                 }
             }
@@ -1474,7 +1482,7 @@ namespace SueñoCelestePagos.Web.Controllers
 
             var FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
 
-            if (hoy.Month == 12 && hoy.Day >= FechasDeVencimiento.PrimerVencimiento.Day)
+            if (hoy.Month == 12 && hoy >= FechasDeVencimiento.PrimerVencimiento)
             {
                 hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
                 FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
@@ -1485,7 +1493,7 @@ namespace SueñoCelestePagos.Web.Controllers
             //    FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month + 1 && x.Año == hoy.Year).FirstOrDefault();
             //}
 
-            for (int mes = FechasDeVencimiento.PrimerVencimiento.Month; mes <= CantCuotasPosibles; mes++)
+            for (int mes = FechasDeVencimiento.Mes; mes <= CantCuotasPosibles; mes++)
             {
                 var cuota = new Cuotas();
 
@@ -1509,7 +1517,7 @@ namespace SueñoCelestePagos.Web.Controllers
 
             var FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
 
-            if (hoy.Month == 12 && hoy.Day >= FechasDeVencimiento.PrimerVencimiento.Day)
+            if (hoy.Month == 12 && hoy >= FechasDeVencimiento.PrimerVencimiento)
             {
                 hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
                 FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
@@ -1520,7 +1528,7 @@ namespace SueñoCelestePagos.Web.Controllers
             //    FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month + 1 && x.Año == hoy.Year).FirstOrDefault();
             //}
 
-            for (int mes = FechasDeVencimiento.PrimerVencimiento.Month; mes <= CantCuotasPosibles; mes++)
+            for (int mes = FechasDeVencimiento.Mes; mes <= CantCuotasPosibles; mes++)
             {
                 var cuota = new Cuotas();
 
@@ -1546,7 +1554,7 @@ namespace SueñoCelestePagos.Web.Controllers
             //var FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
             var FechasDeVencimiento = db.FechasLimitesDebito.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
 
-            if (hoy.Month == 12 && hoy.Day >= FechasDeVencimiento.FechaLimite.Day)
+            if (hoy.Month == 12 && hoy >= FechasDeVencimiento.FechaLimite)
             {
                 hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
                 FechasDeVencimiento = db.FechasLimitesDebito.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
@@ -1557,7 +1565,7 @@ namespace SueñoCelestePagos.Web.Controllers
             //    FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month + 1 && x.Año == hoy.Year).FirstOrDefault();
             //}
 
-            for (int mes = FechasDeVencimiento.FechaLimite.Month; mes <= CantCuotasPosibles; mes++)
+            for (int mes = FechasDeVencimiento.Mes; mes <= CantCuotasPosibles; mes++)
             {
                 var cuota = new Cuotas();
 
@@ -1582,7 +1590,7 @@ namespace SueñoCelestePagos.Web.Controllers
             //var FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
             var FechasDeVencimiento = db.FechasLimitesDebito.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
 
-            if (hoy.Month == 12 && hoy.Day >= FechasDeVencimiento.FechaLimite.Day)
+            if (hoy.Month == 12 && hoy >= FechasDeVencimiento.FechaLimite)
             {
                 hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
                 FechasDeVencimiento = db.FechasLimitesDebito.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
@@ -1593,7 +1601,7 @@ namespace SueñoCelestePagos.Web.Controllers
             //    FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month + 1 && x.Año == hoy.Year).FirstOrDefault();
             //}
 
-            for (int mes = FechasDeVencimiento.FechaLimite.Month; mes <= CantCuotasPosibles; mes++)
+            for (int mes = FechasDeVencimiento.Mes; mes <= CantCuotasPosibles; mes++)
             {
                 var cuota = new Cuotas();
 
@@ -1651,7 +1659,7 @@ namespace SueñoCelestePagos.Web.Controllers
 
             var FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
 
-            if (hoy.Month == 12 && hoy.Day > FechaDeVencimiento.PrimerVencimiento.Day)
+            if (hoy.Month == 12 && hoy > FechaDeVencimiento.PrimerVencimiento)
             {
                 hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
             }

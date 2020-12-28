@@ -54,6 +54,7 @@
     <Compile Include="Debito.cs" />
     <Compile Include="FechaDeVencimiento.cs" />
     <Compile Include="FechaLimiteDebito.cs" />
+    <Compile Include="FechaLimiteVentaCartones.cs" />
     <Compile Include="Institucion.cs" />
     <Compile Include="Pago360\Request\AdhesionPago360Request.cs" />
     <Compile Include="Pago360\Response\AdhesionPago360Response.cs" />
