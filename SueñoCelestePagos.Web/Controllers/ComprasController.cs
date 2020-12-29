@@ -305,9 +305,9 @@ namespace SueñoCelestePagos.Web.Controllers
 
             ViewBag.Expira = tiempoRestante.Minutes.ToString().PadLeft(2, '0') + ":" + tiempoRestante.Seconds.ToString().PadLeft(2, '0');
 
-            var cuotasManual = ObtenerCuotasPosibles();
+            var cuotasManual = ObtenerCuotasPosibles(cartonReservado.CartonID);
 
-            var cuotasDebito = ObtenerCuotasDebitoPosibles();
+            var cuotasDebito = ObtenerCuotasDebitoPosibles(cartonReservado.CartonID);
 
             ViewBag.CantCuotasManual = new SelectList(cuotasManual, "key", "value");
 
@@ -355,7 +355,7 @@ namespace SueñoCelestePagos.Web.Controllers
             }
             try
             {
-                var Carton = db.Cartones.Where(x => x.ID == cartonReservado.CartonID && x.Año == hoy.Year).FirstOrDefault();
+                var Carton = db.Cartones.Where(x => x.ID == cartonReservado.CartonID).FirstOrDefault();
 
                 CartonVendido cartonVendido = new CartonVendido();
 
@@ -453,23 +453,27 @@ namespace SueñoCelestePagos.Web.Controllers
 
                     db.CartonesReservados.Remove(ReservaCarton);
 
-                    var FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
+                    //var FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
 
-                    if (hoy.Month == 12 && hoy > FechasDeVencimiento.PrimerVencimiento)
-                    {
-                        hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
-                        FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
-                    }
+                    //if (hoy.Month == 12 && hoy > FechasDeVencimiento.PrimerVencimiento)
+                    //{
+                    //    hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
+                    //    FechasDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
+                    //}
 
                     //if (hoy.Day > FechaDeVencimiento.PrimerVencimiento.Day)
                     //{
                     //    FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == (hoy.Month + 1) && x.Año == hoy.Year).FirstOrDefault();
                     //}
 
-                    int MesCuota = FechasDeVencimiento.Mes;
+                    int MesCuota = hoy.Month;//FechasDeVencimiento.Mes;
 
                     for (int cuota = 1; cuota <= CantCuotas; cuota++)
                     {
+                        if(MesCuota == 13)
+                        {
+                            MesCuota = 1;
+                        }
                         CuotasPlanDePago cuotaPlanDePago = new CuotasPlanDePago();
 
                         cuotaPlanDePago.CartonVendidoID = cartonVendido.ID;
@@ -1479,16 +1483,18 @@ namespace SueñoCelestePagos.Web.Controllers
 
         /***************************************************************************************/
 
-        public List<Cuotas> ObtenerCuotasPosibles()
+        public List<Cuotas> ObtenerCuotasPosibles(int CartonId)
         {
             List<Cuotas> cuotas = new List<Cuotas>();
 
             DateTime hoy = DateTime.Today;
             int c = 1;
 
-            var FechaLimite = db.FechaLimiteVentaCartones.Where(x => x.Vigente).FirstOrDefault();
+            //var FechaLimite = db.FechaLimiteVentaCartones.Where(x => x.Vigente).FirstOrDefault();
 
-            var Meses = FechaLimite.Fecha.Subtract(hoy).Days / (365.25 / 12);
+            var Carton = db.Cartones.Find(CartonId);
+
+            var Meses = Carton.ValidoHasta.Value.Subtract(hoy).Days / (365.25 / 12);
 
             var mesesRound = Math.Round(Meses);
 
@@ -1542,12 +1548,18 @@ namespace SueñoCelestePagos.Web.Controllers
 
         public JsonResult ObtenerCuotasPosiblesJS()
         {
-            return Json(ObtenerCuotasPosibles(), JsonRequestBehavior.AllowGet);
+            int CartonReservadoId = 0;
+
+            int.TryParse(Session["ReservaCarton"].ToString(), out CartonReservadoId);
+
+            var cartonReservado = db.CartonesReservados.Where(x => x.ID == CartonReservadoId).FirstOrDefault();
+
+            return Json(ObtenerCuotasPosibles(cartonReservado.CartonID), JsonRequestBehavior.AllowGet);
         }
 
         /***************************************************************************************/
 
-        public List<Cuotas> ObtenerCuotasDebitoPosibles()
+        public List<Cuotas> ObtenerCuotasDebitoPosibles(int CartonId)
         {
             List<Cuotas> cuotas = new List<Cuotas>();
 
@@ -1555,9 +1567,11 @@ namespace SueñoCelestePagos.Web.Controllers
 
             int c = 1;
 
-            var FechaLimite = db.FechaLimiteVentaCartones.Where(x => x.Vigente).FirstOrDefault();
+            //var FechaLimite = db.FechaLimiteVentaCartones.Where(x => x.Vigente).FirstOrDefault();
 
-            var Meses = FechaLimite.Fecha.Subtract(hoy).Days / (365.25 / 12);
+            var Carton = db.Cartones.Find(CartonId);
+
+            var Meses = Carton.ValidoHasta.Value.Subtract(hoy).Days / (365.25 / 12);
 
             var mesesRound = Math.Round(Meses);
 
@@ -1612,7 +1626,13 @@ namespace SueñoCelestePagos.Web.Controllers
 
         public JsonResult ObtenerCuotasDebitoPosiblesJS()
         {
-            return Json(ObtenerCuotasDebitoPosibles(), JsonRequestBehavior.AllowGet);
+            int CartonReservadoId = 0;
+
+            int.TryParse(Session["ReservaCarton"].ToString(), out CartonReservadoId);
+
+            var cartonReservado = db.CartonesReservados.Where(x => x.ID == CartonReservadoId).FirstOrDefault();
+
+            return Json(ObtenerCuotasDebitoPosibles(cartonReservado.CartonID), JsonRequestBehavior.AllowGet);
         }
 
         /***************************************************************************************/
@@ -1661,7 +1681,7 @@ namespace SueñoCelestePagos.Web.Controllers
         {
             DateTime hoy = DateTime.Now;
 
-            var FechaLimite = db.FechaLimiteVentaCartones.Where(x => x.Vigente).FirstOrDefault();
+            //var FechaLimite = db.FechaLimiteVentaCartones.Where(x => x.Vigente).FirstOrDefault();
 
             //int año = hoy.Year;
 
@@ -1672,9 +1692,9 @@ namespace SueñoCelestePagos.Web.Controllers
             //    hoy = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1);
             //}
 
-            var compra = db.CartonesVendidos.Include(t => t.Carton).Where(x => x.Carton.ValidoHasta == FechaLimite.Fecha && x.PagoCancelado == false).ToList();
+            var compra = db.CartonesVendidos.Include(t => t.Carton).Where(x => x.Carton.ValidoDesde <= hoy && x.Carton.ValidoHasta >= hoy && x.PagoCancelado == false).ToList();
 
-            var Cartones = db.Cartones.Where(x => x.ValidoHasta == FechaLimite.Fecha).ToList();
+            var Cartones = db.Cartones.Where(x => x.ValidoDesde <= hoy && x.ValidoHasta >= hoy).ToList();
 
             if (!string.IsNullOrEmpty(SearchString))
             {

@@ -29,7 +29,7 @@
         {
             <div class="col-md-6">
                 <select name="Año" id="Año" class="form-control">
-                    @for (int año = 2019; año <= Hoy.Year; año++)
+                    @for (int año = 2019; año <= Hoy.Year + 1; año++)
                     {
                         if (ViewBag.Año == año)
                         {
@@ -119,7 +119,7 @@
                                 }
                             </td>
                             <td>
-                                @Html.ActionLink("Ver Mas", "Details", new { Area = "Administrador", id = compra.ID, page = Model.PageNumber }, null) |
+                                @*@Html.ActionLink("Ver Mas", "Details", new { Area = "Administrador", id = compra.ID, page = Model.PageNumber }, null) |*@
                                 @Html.ActionLink("Ver Pagos", "Pagos", new { Area = "Administrador", id = compra.ID, page = Model.PageNumber }, null)
                             </td>
                         </tr>

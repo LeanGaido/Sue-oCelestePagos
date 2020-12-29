@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,11 @@ namespace SueñoCelestePagos.Entities
         public string Calle { get; set; }
 
         public int Altura { get; set; }
+
+        [ForeignKey("Localidad")]
+        public int LocalidadID { get; set; }
+
+        public virtual Localidad Localidad { get; set; }
 
         public string Ciudad { get; set; }
 

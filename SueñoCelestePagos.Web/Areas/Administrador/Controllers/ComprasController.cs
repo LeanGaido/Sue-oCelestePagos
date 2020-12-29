@@ -510,7 +510,7 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
 
         public void ActualizarCompras()
         {
-            var Compras = db.CartonesVendidos.Where(x => x.PagoCancelado == false && x.PagoRealizdo == false).ToList();
+            var Compras = db.CartonesVendidos.Where(x => /*x.PagoCancelado == false &&*/ x.PagoRealizdo == false).ToList();
 
             foreach (var compra in Compras)
             {
@@ -533,7 +533,7 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
                     else
                     {
                         var pago360 = db.Pagos.Where(x => x.external_reference == pagoCompraID).FirstOrDefault();
-                        if (pago360.state == "paid")
+                        if (pago360 != null && pago360.state == "paid")
                         {
                             pagoCompra.Pagado = true;
                             pagoCompra.FechaDePago = DateTime.Now;

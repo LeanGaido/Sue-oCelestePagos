@@ -134,6 +134,14 @@
     <Compile Include="Migrations\202012291212267_FechaLimiteVigente.Designer.cs">
       <DependentUpon>202012291212267_FechaLimiteVigente.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202012291731391_FechasYCambios.cs" />
+    <Compile Include="Migrations\202012291731391_FechasYCambios.Designer.cs">
+      <DependentUpon>202012291731391_FechasYCambios.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202012291751180_validoDesde.cs" />
+    <Compile Include="Migrations\202012291751180_validoDesde.Designer.cs">
+      <DependentUpon>202012291751180_validoDesde.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SueñoCelestePagosContext.cs" />
@@ -211,6 +219,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202012291212267_FechaLimiteVigente.resx">
       <DependentUpon>202012291212267_FechaLimiteVigente.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202012291731391_FechasYCambios.resx">
+      <DependentUpon>202012291731391_FechasYCambios.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202012291751180_validoDesde.resx">
+      <DependentUpon>202012291751180_validoDesde.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
