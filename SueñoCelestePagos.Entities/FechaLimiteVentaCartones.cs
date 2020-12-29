@@ -15,5 +15,7 @@ namespace SueñoCelestePagos.Entities
         public int Año { get; set; }
 
         public DateTime Fecha { get; set; }
+
+        public bool Vigente { get; set; }
     }
 }
