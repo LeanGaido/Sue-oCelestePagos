@@ -17,6 +17,7 @@ using System.Text;
 using SueñoCelestePagos.Web.Areas.Administrador.Models;
 using SueñoCelestePagos.Entities.Pago360;
 using Ganss.Excel;
+using SueñoCelestePagos.Entities.VMs;
 
 namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
 {
@@ -47,6 +48,124 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
                                              .ToList();
 
             return View(Compras.ToPagedList(page,15));
+        }
+
+        /*****************************************************************************************/
+
+        public ActionResult ResumenAcumulado(int? Año, int? InstitucionID, int page = 1)
+        {
+            if (Año == null)
+            {
+                Año = DateTime.Today.Year;
+            }
+
+            var Instituciones = db.Instituciones.ToList();
+
+            ViewBag.InstitucionesID = new SelectList(Instituciones, "ID", "Nombre");
+
+            ViewBag.Año = Año;
+
+            List<ResumenAcumuladoVm> resumenAcumulado = new List<ResumenAcumuladoVm>();
+
+            var CartonesVendido = db.CartonesVendidos.Where(x => x.PagoCancelado == false &&
+                                                                 x.FechaVenta.Year == Año)
+                                                     .Include(x => x.Carton)
+                                                     .Include(x => x.Cliente)
+                                                     .ToList();
+
+            if(InstitucionID != null)
+            {
+                CartonesVendido = CartonesVendido.Where(x => x.EntidadID == InstitucionID).ToList();
+            }
+
+            ResumenAcumuladoVm totalMensual = new ResumenAcumuladoVm();
+            totalMensual.Institucion = "Totales Mensuales";
+
+            foreach (var CartonVendido in CartonesVendido)
+            {
+                var pagos = db.PagosCartonesVendidos.Where(x => x.CartonVendidoID == CartonVendido.ID && x.Pagado == true)
+                                                    .ToList();
+
+                if(pagos.Count >= 1)
+                {
+                    ResumenAcumuladoVm nuevoResumenAcumulado = new ResumenAcumuladoVm();
+
+                    nuevoResumenAcumulado.NroCarton = CartonVendido.Carton.Numero;
+                    nuevoResumenAcumulado.NombreCompleto = CartonVendido.Cliente.NombreCompleto;
+                    nuevoResumenAcumulado.Dni = CartonVendido.Cliente.Dni;
+                    nuevoResumenAcumulado.Telefono = CartonVendido.Cliente.Celular;
+                    nuevoResumenAcumulado.Localidad = CartonVendido.Cliente.Localidad.Descripcion;
+
+                    var institucion = db.Instituciones.Where(x => x.ID == CartonVendido.EntidadID).FirstOrDefault();
+                    nuevoResumenAcumulado.Institucion = (institucion == null) ? "" : institucion.Nombre;
+
+                    foreach (var pago in pagos)
+                    {
+                        switch (pago.FechaDePago.Month)
+                        {
+                            case 1:
+                                nuevoResumenAcumulado.PagoEnero += pago.Pago;
+                                totalMensual.PagoEnero += pago.Pago;
+                                break;
+                            case 2:
+                                nuevoResumenAcumulado.PagoFebrero += pago.Pago;
+                                totalMensual.PagoFebrero += pago.Pago;
+                                break;
+                            case 3:
+                                nuevoResumenAcumulado.PagoMarzo += pago.Pago;
+                                totalMensual.PagoMarzo += pago.Pago;
+                                break;
+                            case 4:
+                                nuevoResumenAcumulado.PagoAbril += pago.Pago;
+                                totalMensual.PagoAbril += pago.Pago;
+                                break;
+                            case 5:
+                                nuevoResumenAcumulado.PagoMayo += pago.Pago;
+                                totalMensual.PagoMayo += pago.Pago;
+                                break;
+                            case 6:
+                                nuevoResumenAcumulado.PagoJunio += pago.Pago;
+                                totalMensual.PagoJunio += pago.Pago;
+                                break;
+                            case 7:
+                                nuevoResumenAcumulado.PagoJulio += pago.Pago;
+                                totalMensual.PagoJulio += pago.Pago;
+                                break;
+                            case 8:
+                                nuevoResumenAcumulado.PagoAgosto += pago.Pago;
+                                totalMensual.PagoAgosto += pago.Pago;
+                                break;
+                            case 9:
+                                nuevoResumenAcumulado.PagoSeptiembre += pago.Pago;
+                                totalMensual.PagoSeptiembre += pago.Pago;
+                                break;
+                            case 10:
+                                nuevoResumenAcumulado.PagoOctubre += pago.Pago;
+                                totalMensual.PagoOctubre += pago.Pago;
+                                break;
+                            case 11:
+                                nuevoResumenAcumulado.PagoNoviembre += pago.Pago;
+                                totalMensual.PagoNoviembre += pago.Pago;
+                                break;
+                            case 12:
+                                nuevoResumenAcumulado.PagoDiciembre += pago.Pago;
+                                totalMensual.PagoDiciembre += pago.Pago;
+                                break;
+                        }
+
+                        nuevoResumenAcumulado.TotalPagos += pago.Pago;
+                    }
+
+                    resumenAcumulado.Add(nuevoResumenAcumulado);
+
+                    totalMensual.TotalPagos += nuevoResumenAcumulado.TotalPagos;
+                }
+
+            }
+
+            resumenAcumulado.Add(totalMensual);
+
+            return View(resumenAcumulado.ToPagedList(page, 15));
         }
 
         /*****************************************************************************************/

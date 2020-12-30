@@ -47,7 +47,7 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Nombre,Cuit,Calle,Altura,Ciudad,Provincia,AreaTelefono,NumeroTelefono")] Institucion institucion)
+        public ActionResult Create([Bind(Include = "ID,Nombre,Cuit,Calle,Altura,LocalidadID,AreaTelefono,NumeroTelefono")] Institucion institucion)
         {
             if (ModelState.IsValid)
             {
@@ -79,7 +79,7 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Nombre,Cuit,Calle,Altura,Ciudad,Provincia,AreaTelefono,NumeroTelefono")] Institucion institucion)
+        public ActionResult Edit([Bind(Include = "ID,Nombre,Cuit,Calle,Altura,LocalidadID,AreaTelefono,NumeroTelefono")] Institucion institucion)
         {
             if (ModelState.IsValid)
             {

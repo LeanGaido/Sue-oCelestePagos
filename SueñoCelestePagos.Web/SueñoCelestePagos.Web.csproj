@@ -2496,6 +2496,7 @@
     <Content Include="Areas\Administrador\Views\FechasLimitesDebito\Edit.cshtml" />
     <Content Include="Areas\Administrador\Views\FechasLimitesDebito\Index.cshtml" />
     <Content Include="Areas\Administrador\Views\Instituciones\Aporte.cshtml" />
+    <Content Include="Areas\Administrador\Views\Compras\ResumenAcumulado.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\i18n\defaults-zh_TW.min.js" />

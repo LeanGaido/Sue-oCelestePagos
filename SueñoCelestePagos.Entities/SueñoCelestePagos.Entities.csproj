@@ -76,6 +76,7 @@
     <Compile Include="Pago360\Response\SolicitudDebitoResponse.cs" />
     <Compile Include="SolicitudDebito.cs" />
     <Compile Include="TipoDePago.cs" />
+    <Compile Include="VMs\ResumenAcumuladoVm.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
