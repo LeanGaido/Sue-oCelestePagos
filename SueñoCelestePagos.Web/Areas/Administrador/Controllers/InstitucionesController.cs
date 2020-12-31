@@ -39,6 +39,8 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
         // GET: Administrador/Instituciones/Create
         public ActionResult Create()
         {
+            ViewBag.LocalidadID = new SelectList(db.Localidades, "ID", "Descripcion");
+
             return View();
         }
 
@@ -55,6 +57,7 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.LocalidadID = new SelectList(db.Localidades, "ID", "Descripcion", institucion.LocalidadID);
 
             return View(institucion);
         }
@@ -71,6 +74,7 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.LocalidadID = new SelectList(db.Localidades, "ID", "Descripcion", institucion.LocalidadID);
             return View(institucion);
         }
 
@@ -87,6 +91,7 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.LocalidadID = new SelectList(db.Localidades, "ID", "Descripcion", institucion.LocalidadID);
             return View(institucion);
         }
 
@@ -101,6 +106,7 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.LocalidadID = new SelectList(db.Localidades, "ID", "Descripcion");
 
             return View(institucion);
         }
@@ -117,8 +123,9 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.LocalidadID = new SelectList(db.Localidades, "ID", "Descripcion");
 
-            if(Aporte < 1)
+            if (Aporte < 1)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }

@@ -20,6 +20,7 @@
     <link type="text/css" rel="stylesheet" href="~/Areas/Administrador/Content/styles/main.css">
     <link type="text/css" rel="stylesheet" href="~/Areas/Administrador/Content/styles/style-responsive.css">
     <link type="text/css" rel="stylesheet" href="~/Content/styles/Odontograma.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap-select.min.css" />
 </head>
 <body>
     <div>
@@ -88,6 +89,13 @@
                         </li>
 
                         <li>
+                            <a href="@Url.Action("ResumenAcumulado","Compras")">
+                                <i class="fa fa-group"></i>
+                                <span class="menu-title">PANEL DE COMPRAS ACUMULADO</span>
+                            </a>
+                        </li>
+
+                        <li>
                             <a href="@Url.Action("Index","Clientes")">
                                 <i class="fa fa-group"></i>
                                 <span class="menu-title">CLIENTES</span>
@@ -139,10 +147,12 @@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Areas/Administrador/Content/script/jquery-migrate-1.2.1.min.js"></script>
     <script src="~/Areas/Administrador/Content/script/jquery-ui.js"></script>
-    <script src="~/Areas/Administrador/Content/script/bootstrap.min.js"></script>
+    @*<script src="~/Areas/Administrador/Content/script/bootstrap.min.js"></script>*@
     <script src="~/Areas/Administrador/Content/script/bootstrap-hover-dropdown.js"></script>
     <script src="~/Areas/Administrador/Content/script/index.js"></script>
     <script src="~/Areas/Administrador/Content/script/main.js"></script>
     <script src="~/Areas/Administrador/Content/script/custom.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-select.min.js"></script>
 </body>
 </html>
