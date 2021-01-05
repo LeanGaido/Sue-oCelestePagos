@@ -52,7 +52,7 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
 
         /*****************************************************************************************/
 
-        public ActionResult ResumenAcumulado(int? Año, int? InstitucionID, int page = 1)
+        public ActionResult ResumenAcumulado(int? Año, int InstitucionesID = 0, int page = 1)
         {
             if (Año == null)
             {
@@ -61,9 +61,39 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
 
             var Instituciones = db.Instituciones.ToList();
 
-            ViewBag.InstitucionesID = new SelectList(Instituciones, "ID", "Nombre");
+            Instituciones.Insert(0, new Institucion() { ID = 0, Nombre = "" });
+
+            ViewBag.InstitucionesID = new SelectList(Instituciones, "ID", "Nombre", InstitucionesID);
 
             ViewBag.Año = Año;
+            ViewBag.InstitucionID = InstitucionesID;
+
+            List<ResumenAcumuladoVm> resumenAcumulado = ObtenerResumenAcumulado(Año, InstitucionesID);
+
+            return View(resumenAcumulado.ToPagedList(page, 15));
+        }
+
+        public FileContentResult DescargarResumenAcumulado(int? Año, int InstitucionesID = 0)
+        {
+            List<CartonVendido> CartonesVendido = new List<CartonVendido>();
+
+            List<ResumenAcumuladoVm> resumenAcumulado = ObtenerResumenAcumulado(Año, InstitucionesID);
+
+            ExcelMapper mapper = new ExcelMapper();
+
+            string newFile = Server.MapPath("~/Archivos/Exportacion/compras/compras" + Año + ".xlsx");
+
+            mapper.Save(newFile, resumenAcumulado, "SheetName", true);
+
+            String mimeType = MimeMapping.GetMimeMapping(newFile);
+
+            byte[] stream = System.IO.File.ReadAllBytes(newFile);
+
+            return File(stream, mimeType);
+        }
+
+        private List<ResumenAcumuladoVm> ObtenerResumenAcumulado(int? Año, int InstitucionesID)
+        {
 
             List<ResumenAcumuladoVm> resumenAcumulado = new List<ResumenAcumuladoVm>();
 
@@ -73,9 +103,9 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
                                                      .Include(x => x.Cliente)
                                                      .ToList();
 
-            if(InstitucionID != null)
+            if (InstitucionesID != 0)
             {
-                CartonesVendido = CartonesVendido.Where(x => x.EntidadID == InstitucionID).ToList();
+                CartonesVendido = CartonesVendido.Where(x => x.EntidadID == InstitucionesID).ToList();
             }
 
             ResumenAcumuladoVm totalMensual = new ResumenAcumuladoVm();
@@ -86,7 +116,7 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
                 var pagos = db.PagosCartonesVendidos.Where(x => x.CartonVendidoID == CartonVendido.ID && x.Pagado == true)
                                                     .ToList();
 
-                if(pagos.Count >= 1)
+                if (pagos.Count >= 1)
                 {
                     ResumenAcumuladoVm nuevoResumenAcumulado = new ResumenAcumuladoVm();
 
@@ -165,7 +195,7 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
 
             resumenAcumulado.Add(totalMensual);
 
-            return View(resumenAcumulado.ToPagedList(page, 15));
+            return resumenAcumulado;
         }
 
         /*****************************************************************************************/

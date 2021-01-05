@@ -4,28 +4,20 @@
     ViewBag.Title = "Index";
 }
 
-
-<!--BEGIN TITLE & BREADCRUMB PAGE-->
-<div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
-    <div class="page-header pull-left">
-        <div class="page-title">
-            Sueño Celeste
-        </div>
-    </div>
-    <ol class="breadcrumb page-breadcrumb pull-right">
-        <li><i class="fa fa-home"></i>&nbsp;<a href="@Url.Action("Index","Home")">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-        <li class="hidden"><a href="#"></a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-        <li class="active">Principal</li>
-    </ol>
-    <div class="clearfix">
-    </div>
-</div>
+<!--BEGIN TITLE & BREADCRUMB PAGE--><!--BEGIN TITLE & BREADCRUMB PAGE-->
+<h1 class="page-header">Fechas de Vencimiento</h1>
+<ul class="breadcrumb">
+    <li><span class="glyphicon glyphicon-home">&nbsp;</span>Home</li>
+    <li><a href="#">Fechas de Vencimiento</a></li>
+</ul>
 <!--END TITLE & BREADCRUMB PAGE-->
 
+<hr />
+
 <br />
-<div id="title-breadcrumb-option-demo" class="page-title-breadcrumb" style="border-left:5px solid #e5e5e5;border-top:5px solid #e5e5e5;border-right:5px solid #e5e5e5">
+<div>
     <div class="col-md-8">
-        @using (Html.BeginForm())
+        @*@using (Html.BeginForm())
         {
             <div class="col-md-6">
                 <input type="text" name="searchString" id="searchString" class="form-control" value="@ViewBag.CurrentFilter " />
@@ -33,21 +25,16 @@
             <div class="col-md-2">
                 <input type="submit" value="Buscar" class="btn btn-primary" />
             </div>
-        }
+        }*@
+    </div>
+    <div class="col-md-4">
+        <a href="@Url.Action("Create", "FechasDeVencimientos")" class="btn btn-primary">Agregar Nueva Fecha De Vencimiento</a>
     </div>
     <div class="clearfix">
     </div>
 </div>
 
-<div id="title-breadcrumb-option-demo" class="page-title-breadcrumb" style="border-top:5px solid #e5e5e5">
-    <div class="page-header pull-right">
-        <div class="page-title">
-            <a href="@Url.Action("Create", "FechasDeVencimientos")" class="btn btn-primary">Agregar Nueva Fecha De Vencimiento</a>
-        </div>
-    </div>
-    <div class="clearfix">
-    </div>
-</div>
+<hr />
 
 <!--BEGIN CONTENT-->
 <div class="page-content">
@@ -116,8 +103,6 @@
     </div>
 </div>
 <!--END CONTENT-->
-
-
 @*<p>
-    @Html.ActionLink("Create New", "Create")
-</p>*@
+        @Html.ActionLink("Create New", "Create")
+    </p>*@

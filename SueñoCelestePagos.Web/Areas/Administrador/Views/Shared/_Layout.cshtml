@@ -12,147 +12,358 @@
     <!--Loading bootstrap css-->
     <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,700">
     <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Oswald:400,700,300">
-    <link type="text/css" rel="stylesheet" href="~/Areas/Administrador/Content/styles/jquery-ui-1.10.4.custom.min.css">
+    @*<link type="text/css" rel="stylesheet" href="~/Areas/Administrador/Content/styles/jquery-ui-1.10.4.custom.min.css">
     <link type="text/css" rel="stylesheet" href="~/Areas/Administrador/Content/styles/font-awesome.min.css">
     <link type="text/css" rel="stylesheet" href="~/Areas/Administrador/Content/styles/bootstrap.min.css">
     <link type="text/css" rel="stylesheet" href="~/Areas/Administrador/Content/styles/animate.css">
     <link type="text/css" rel="stylesheet" href="~/Areas/Administrador/Content/styles/all.css">
     <link type="text/css" rel="stylesheet" href="~/Areas/Administrador/Content/styles/main.css">
-    <link type="text/css" rel="stylesheet" href="~/Areas/Administrador/Content/styles/style-responsive.css">
+    <link type="text/css" rel="stylesheet" href="~/Areas/Administrador/Content/styles/style-responsive.css">*@
     <link type="text/css" rel="stylesheet" href="~/Content/styles/Odontograma.css" />
+    <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.3/animate.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://s3-us-west-2.amazonaws.com/s.cdpn.io/172203/font-awesome.min.css" />
     <link rel="stylesheet" href="~/Content/bootstrap-select.min.css" />
+    <style>
+        /*body {
+            padding-top: 80px;
+        }
+
+        #sidebar {
+            position: fixed;
+            top: 50px;
+            left: 220px;
+            width: 220px;
+            margin-left: -220px;
+            border: none;
+            border-radius: 0;
+            overflow-y: auto;
+            background-color: #222;
+            bottom: 0;
+            overflow-x: hidden;
+            padding-bottom: 40px;
+        }
+
+        .side-bar > li > a {
+            color: #eee;
+            width: 220px;
+        }
+
+        .side-bar li a:hover,
+        .side-bar li a:focus {
+            background-color: #333;
+        }
+
+        .tmargin {
+            margin-top: 15px;
+        }*/
+        .nav-pills > li > a {
+           border-radius: 0;
+        }
+
+        #wrapper {
+           padding-left: 0;
+           -webkit-transition: all 0.5s ease;
+           -moz-transition: all 0.5s ease;
+           -o-transition: all 0.5s ease;
+           transition: all 0.5s ease;
+           overflow: hidden;
+        }
+
+        #wrapper.toggled {
+           padding-left: 250px;
+           overflow: hidden;
+        }
+
+        #sidebar-wrapper {
+           z-index: 1000;
+           position: absolute;
+           left: 250px;
+           width: 0;
+           height: 100%;
+           margin-left: -250px;
+           overflow-y: auto;
+           background: #000;
+           -webkit-transition: all 0.5s ease;
+           -moz-transition: all 0.5s ease;
+           -o-transition: all 0.5s ease;
+           transition: all 0.5s ease;
+        }
+
+        #wrapper.toggled #sidebar-wrapper {
+           width: 250px;
+        }
+
+        #page-content-wrapper {
+           position: absolute;
+           padding: 15px;
+           width: 100%;
+           overflow-x: hidden;
+        }
+
+        .xyz {
+           min-width: 360px;
+        }
+
+        #wrapper.toggled #page-content-wrapper {
+           position: relative;
+           margin-right: 0px;
+        }
+
+        .fixed-brand {
+           width: auto;
+        }
+        /* Sidebar Styles */
+
+        .sidebar-nav {
+           position: absolute;
+           top: 0;
+           width: 250px;
+           margin: 0;
+           padding: 0;
+           list-style: none;
+           margin-top: 2px;
+        }
+
+        .sidebar-nav li {
+           text-indent: 15px;
+           line-height: 40px;
+        }
+
+        .sidebar-nav li a {
+           display: block;
+           text-decoration: none;
+           color: #999999;
+        }
+
+        .sidebar-nav li a:hover {
+           text-decoration: none;
+           color: #fff;
+           background: rgba(255, 255, 255, 0.2);
+           border-left: red 2px solid;
+        }
+
+        .sidebar-nav li a:active,
+        .sidebar-nav li a:focus {
+           text-decoration: none;
+        }
+
+        .sidebar-nav > .sidebar-brand {
+           height: 65px;
+           font-size: 18px;
+           line-height: 60px;
+        }
+
+        .sidebar-nav > .sidebar-brand a {
+           color: #999999;
+        }
+
+        .sidebar-nav > .sidebar-brand a:hover {
+           color: #fff;
+           background: none;
+        }
+
+        .no-margin {
+           margin: 0;
+        }
+
+        @@media (min-width: 768px) {
+           #wrapper {
+              padding-left: 250px;
+           }
+           .fixed-brand {
+              width: 250px;
+           }
+           #wrapper.toggled {
+              padding-left: 0;
+           }
+           #sidebar-wrapper {
+              width: 250px;
+           }
+           #wrapper.toggled #sidebar-wrapper {
+              width: 250px;
+           }
+           #wrapper.toggled-2 #sidebar-wrapper {
+              width: 50px;
+           }
+           #wrapper.toggled-2 #sidebar-wrapper:hover {
+              width: 250px;
+           }
+           #page-content-wrapper {
+              padding: 20px;
+              position: relative;
+              -webkit-transition: all 0.5s ease;
+              -moz-transition: all 0.5s ease;
+              -o-transition: all 0.5s ease;
+              transition: all 0.5s ease;
+           }
+           #wrapper.toggled #page-content-wrapper {
+              position: relative;
+              margin-right: 0;
+              padding-left: 250px;
+           }
+           #wrapper.toggled-2 #page-content-wrapper {
+              position: relative;
+              margin-right: 0;
+              margin-left: -200px;
+              -webkit-transition: all 0.5s ease;
+              -moz-transition: all 0.5s ease;
+              -o-transition: all 0.5s ease;
+              transition: all 0.5s ease;
+              width: auto;
+           }
+        }
+
+    </style>
 </head>
 <body>
-    <div>
-        <!--BEGIN TOPBAR-->
-        <div id="header-topbar-option-demo" class="page-header-topbar">
-            <div id="topbar" role="navigation" style="margin-bottom: 0;" data-step="3" class="navbar navbar-default navbar-static-top">
-                <div class="navbar-header">
-                    <a id="logo" href="" class="navbar-brand">
-                        <span class="fa fa-rocket"></span>
-                        <span class="logo-text">SysAdmin</span>
-                        <span style="display: none" class="logo-text-icon">µ</span>
-                    </a>
-                    @*<a id="logo" href=""><img src="~/Areas/Administrador/Content/images/"></a>*@
-                </div>
-                <div class="topbar-main">
-                    <a id="menu-toggle" href="#" class="hidden-xs"><i class="fa fa-bars"></i></a>
+    <!--<nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Admin Panel</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#"><span class="glyphicon glyphicon-user">&nbsp;</span>Hello Admin</a></li>-->
+    @*<li class="active"><a title="View Website" href="#"><span class="glyphicon glyphicon-globe"></span></a></li>
+    *@
+    <!--<li><a href="javascript:document.getElementById('logoutForm').submit()">Cerrar Sesion</a></li>
+                </ul>
 
-                    <div class="news-update-box hidden-xs">
-                        <ul id="news-update" class="ticker list-unstyled">
-                            <li></li>
+                <div class="col-md-2">
+                    <div id="sidebar">
+                        <ul class="nav navbar-nav side-bar">
+                            <li class="side-bar tmargin"><a href="@Url.Action("Index","Home")"><span class="glyphicon glyphicon-list">&nbsp;</span>HOME</a></li>
+                            <li class="side-bar"><a href="@Url.Action("Index","Compras")"><span class="glyphicon glyphicon-credit-card">&nbsp;</span>COMPRAS</a></li>
+                            <li class="side-bar"><a href="@Url.Action("VentasACancelar","Compras")"><span class="glyphicon glyphicon-minus">&nbsp;</span>CANCELAR COMPRAS</a></li>
+                            <li class="side-bar"><a href="@Url.Action("ResumenAcumulado","Compras")"><span class="glyphicon glyphicon-list">&nbsp;</span>PANEL DE COMPRAS ACUMULADO</a></li>
+                            <li class="side-bar"><a href="@Url.Action("Index","Clientes")"><span class="glyphicon glyphicon-list">&nbsp;</span>CLIENTES</a></li>
+                            <li>
+                                @*@using (Html.BeginForm("LogOff", "Account", new { Area = "" }, FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                }*@
+                                <a href="javascript:document.getElementById('logoutForm').submit()"><span class="glyphicon glyphicon-log-out">&nbsp;</span>CERRAR SESIÓN</a>
+
+                            </li>
                         </ul>
                     </div>
-                    <ul class="nav navbar navbar-top-links navbar-right mbn">
-                        <li>
-                            <br />
-                            Usuario Logueado:
-                        </li>
-                    </ul>
-
                 </div>
             </div>
         </div>
-
-        <div id="wrapper">
-            <!--BEGIN SIDEBAR MENU-->
-            <nav id="sidebar" role="navigation" data-step="2" data-position="right" class="navbar-default navbar-static-side">
-                <div class="sidebar-collapse menu-scroll">
-                    <ul id="side-menu" class="nav">
-                        <div class="clearfix"></div>
-                        <li class="active">
-                            <a href="">
-                                <i class="fa fa-tachometer fa-fw"></i>
-                                <span class="menu-title">MENÚ</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="@Url.Action("Index","Home")">
-                                <i class="fa fa-home"></i>
-                                <span class="menu-title">HOME</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="@Url.Action("Index","Compras")">
-                                <i class="fa fa-group"></i>
-                                <span class="menu-title">COMPRAS</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="@Url.Action("VentasACancelar","Compras")">
-                                <i class="fa fa-group"></i>
-                                <span class="menu-title">CANCELAR COMPRAS</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="@Url.Action("ResumenAcumulado","Compras")">
-                                <i class="fa fa-group"></i>
-                                <span class="menu-title">PANEL DE COMPRAS ACUMULADO</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="@Url.Action("Index","Clientes")">
-                                <i class="fa fa-group"></i>
-                                <span class="menu-title">CLIENTES</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="@Url.Action("Index","FechasDeVencimientos")">
-                                <i class="fa fa-group"></i>
-                                <span class="menu-title">COMPRAS</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            @using (Html.BeginForm("LogOff", "Account", new { Area = "" }, FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
-                            {
-                                @Html.AntiForgeryToken()
-                            }
-                            <a href="javascript:document.getElementById('logoutForm').submit()">
-                                <i class="fa fa-power-off"></i>
-                                <span class="menu-title">CERRAR SESIÓN</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-            <!--END SIDEBAR MENU-->
-            <!--BEGIN PAGE WRAPPER-->
-            <div id="page-wrapper">
-                <!--BEGIN CONTENT-->
-                @RenderBody()
-                <!--END CONTENT-->
-                <!--BEGIN FOOTER-->
-                <div id="footer">
-                    <div class="copyright">
-                        <a href="">2020 ©</a>
+    </nav>-->
+    <!--<div class="container-fluid">
+        <div class="col-md-10 animated">-->
+    <!--BEGIN CONTENT-->
+    @*@RenderBody()*@
+    <!--END CONTENT-->
+    <!--</div>
+    </div>-->
+    <nav class="navbar navbar-default no-margin">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header fixed-brand">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" id="menu-toggle">
+                <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
+            </button>
+            <a class="navbar-brand" href="#"><span class="glyphicon glyphicon-user"></span> ADMINISTRADOR</a>
+        </div>
+        <!-- navbar-header-->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <button class="navbar-toggle collapse in" data-toggle="collapse" id="menu-toggle-2">
+                        <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <!-- bs-example-navbar-collapse-1 -->
+    </nav>
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
+                <li class="active">
+                    <a href="@Url.Action("Index","Home")"><span class="fa-stack fa-lg pull-left glyphicon glyphicon-list"></span> HOME</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index","Compras")"><span class="fa-stack fa-lg pull-left glyphicon glyphicon-credit-card"></span>COMPRAS</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("VentasACancelar","Compras")"> <span class="fa-stack fa-lg pull-left glyphicon glyphicon-minus"></span>CANCELAR COMPRAS</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("ResumenAcumulado","Compras")"><span class="fa-stack fa-lg pull-left glyphicon glyphicon-list"></span>PANEL DE COMPRAS</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index","Clientes")"><span class="fa-stack fa-lg pull-left glyphicon glyphicon-list"></span>CLIENTES</a>
+                </li>
+                <li>
+                    @using (Html.BeginForm("LogOff", "Account", new { Area = "" }, FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                    {
+                        @Html.AntiForgeryToken()
+                    }
+                    <a href="javascript:document.getElementById('logoutForm').submit()"><span class="fa-stack fa-lg pull-left glyphicon glyphicon-log-out"></span>CERRAR SESIÓN</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid xyz">
+                <div class="row">
+                    <div class="col-lg-12">
+                        @RenderBody()
                     </div>
                 </div>
-                <!--END FOOTER-->
             </div>
-            <!--END PAGE WRAPPER-->
         </div>
+        <!-- /#page-content-wrapper -->
     </div>
+    <!-- /#wrapper -->
 
-    @*@Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/bootstrap")
-        @RenderSection("scripts", required: false)*@
-    @*<script src="~/Areas/Administrador/Content/script/jquery-1.10.2.min.js"></script>*@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <script src="~/Areas/Administrador/Content/script/jquery-migrate-1.2.1.min.js"></script>
-    <script src="~/Areas/Administrador/Content/script/jquery-ui.js"></script>
-    @*<script src="~/Areas/Administrador/Content/script/bootstrap.min.js"></script>*@
-    <script src="~/Areas/Administrador/Content/script/bootstrap-hover-dropdown.js"></script>
-    <script src="~/Areas/Administrador/Content/script/index.js"></script>
-    <script src="~/Areas/Administrador/Content/script/main.js"></script>
-    <script src="~/Areas/Administrador/Content/script/custom.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap-select.min.js"></script>
+    <script>
+        $("#menu-toggle").click(function (e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
+        $("#menu-toggle-2").click(function (e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled-2");
+            $('#menu ul').hide();
+        });
+
+        function initMenu() {
+            $('#menu ul').hide();
+            $('#menu ul').children('.current').parent().show();
+            //$('#menu ul:first').show();
+            $('#menu li a').click(
+                function () {
+                    var checkElement = $(this).next();
+                    if ((checkElement.is('ul')) && (checkElement.is(':visible'))) {
+                        return false;
+                    }
+                    if ((checkElement.is('ul')) && (!checkElement.is(':visible'))) {
+                        $('#menu ul:visible').slideUp('normal');
+                        checkElement.slideDown('normal');
+                        return false;
+                    }
+                }
+            );
+        }
+        $(document).ready(function () {
+            initMenu();
+
+            $('#menu-toggle-2').click();
+        });
+    </script>
 </body>
 </html>

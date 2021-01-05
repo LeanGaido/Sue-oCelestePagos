@@ -4,41 +4,27 @@
     ViewBag.Title = "Nueva Fecha Limite";
 }
 
-
-<!--BEGIN TITLE & BREADCRUMB PAGE-->
-<div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
-    <div class="page-header pull-left">
-        <div class="page-title">
-            @ViewBag.Title
-        </div>
-    </div>
-    <ol class="breadcrumb page-breadcrumb pull-right">
-        <li><i class="fa fa-home"></i>&nbsp;<a href="@Url.Action("Index","Home")">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-        <li class="hidden"><a href="#"></a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-        <li class="active">Principal</li>
-    </ol>
-    <div class="clearfix">
-    </div>
-</div>
+<!--BEGIN TITLE & BREADCRUMB PAGE--><!--BEGIN TITLE & BREADCRUMB PAGE-->
+<h1 class="page-header">Fechas Limite</h1>
+<ul class="breadcrumb">
+    <li><span class="glyphicon glyphicon-home">&nbsp;</span>Home</li>
+    <li><a href="#">Fechas Limite</a></li>
+</ul>
 <!--END TITLE & BREADCRUMB PAGE-->
+
+<hr />
+
 <!--BEGIN CONTENT-->
 <div class="page-content">
     <div id="tab-general">
-        <div class="col-md-2">
-
-        </div>
-        <div class="col-md-8">
+        <div class="col-md-11">
             <div class="panel">
-                <div class="panel-heading">
-                    <h3 class="text-center"></h3>
-                </div>
                 <div class="panel-body">
                     @using (Html.BeginForm())
                     {
                         @Html.AntiForgeryToken()
 
                         <div class="form-horizontal">
-                            <hr />
                             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Mes, htmlAttributes: new { @class = "control-label col-md-2" })

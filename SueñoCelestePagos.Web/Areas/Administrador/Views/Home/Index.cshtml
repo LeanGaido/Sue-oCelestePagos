@@ -1,18 +1,10 @@
 ﻿<!--BEGIN TITLE & BREADCRUMB PAGE-->
-<div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
-    <div class="page-header pull-left">
-        <div class="page-title">
-            Sueño Celeste - Sistema de Cobros de Cartones
-        </div>
-    </div>
-    <ol class="breadcrumb page-breadcrumb pull-right">
-        <li><i class="fa fa-home"></i>&nbsp;<a href="@Url.Action("Index","Home")">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-        <li class="hidden"><a href="#"></a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-        <li class="active">Principal</li>
-    </ol>
-    <div class="clearfix">
-    </div>
-</div>
+
+<h1 class="page-header">Home</h1>
+<ul class="breadcrumb">
+    <li><span class="glyphicon glyphicon-home">&nbsp;</span>Home</li>
+    <li><a href="#">Home</a></li>
+</ul>
 <!--END TITLE & BREADCRUMB PAGE-->
 <!--BEGIN CONTENT-->
 <div class="page-content">
@@ -21,9 +13,9 @@
             <div class="col-sm-6 col-md-3">
                 <div class="panel profit db mbm">
                     <div class="panel-body">
-                        <p class="icon">
+                        @*<p class="icon">
                             <i class="icon fa fa-group"></i>
-                        </p>
+                        </p>*@
                         <h4 class="value">
                             <span data-counter="" data-start="10" data-end="50" data-step="1" data-duration="0"></span>
                             <a href="@Url.Action("Index","Compras")"><span>Compras</span></a>
@@ -40,9 +32,9 @@
             <div class="col-sm-6 col-md-3">
                 <div class="panel profit db mbm">
                     <div class="panel-body">
-                        <p class="icon">
+                        @*<p class="icon">
                             <i class="icon fa fa-group"></i>
-                        </p>
+                        </p>*@
                         <h4 class="value">
                             <span data-counter="" data-start="10" data-end="50" data-step="1" data-duration="0"></span>
                             <a href="@Url.Action("VentasACancelar","Compras")"><span>Cancelar Compras</span></a>
@@ -59,9 +51,9 @@
             <div class="col-sm-6 col-md-3">
                 <div class="panel profit db mbm">
                     <div class="panel-body">
-                        <p class="icon">
+                        @*<p class="icon">
                             <i class="icon fa fa-group"></i>
-                        </p>
+                        </p>*@
                         <h4 class="value">
                             <span data-counter="" data-start="10" data-end="50" data-step="1" data-duration="0"></span>
                             <a href="@Url.Action("Index","Clientes")"><span>Clientes</span></a>
@@ -78,9 +70,9 @@
             <div class="col-sm-6 col-md-3">
                 <div class="panel profit db mbm">
                     <div class="panel-body">
-                        <p class="icon">
+                        @*<p class="icon">
                             <i class="icon fa fa-group"></i>
-                        </p>
+                        </p>*@
                         <h4 class="value">
                             <span data-counter="" data-start="10" data-end="50" data-step="1" data-duration="0"></span>
                             <a href="@Url.Action("Index","FechasDeVencimientos")"><span>Fechas Vto</span></a>
@@ -96,13 +88,14 @@
             </div>
 
         </div>
+        <hr />
         <div id="sum_box" class="row mbl">
             <div class="col-sm-6 col-md-3">
                 <div class="panel profit db mbm">
                     <div class="panel-body">
-                        <p class="icon">
+                        @*<p class="icon">
                             <i class="icon fa fa-group"></i>
-                        </p>
+                        </p>*@
                         <h4 class="value">
                             <span data-counter="" data-start="10" data-end="50" data-step="1" data-duration="0"></span>
                             <a href="@Url.Action("Index","Instituciones")"><span>Instituciones</span></a>
@@ -116,14 +109,12 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div id="sum_box" class="row mbl">
             <div class="col-sm-6 col-md-3">
                 <div class="panel profit db mbm">
                     <div class="panel-body">
-                        <p class="icon">
+                        @*<p class="icon">
                             <i class="icon fa fa-group"></i>
-                        </p>
+                        </p>*@
                         <h4 class="value">
                             <span data-counter="" data-start="10" data-end="50" data-step="1" data-duration="0"></span>
                             <a href="@Url.Action("ResumenAcumulado","Compras")"><span>Panel de Compras Acumulado</span></a>
@@ -140,4 +131,5 @@
         </div>
     </div>
 </div>
+
 <!--END CONTENT-->

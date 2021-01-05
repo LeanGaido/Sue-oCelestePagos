@@ -1,32 +1,22 @@
 ﻿@model SueñoCelestePagos.Entities.CartonVendido
 
-<!--BEGIN TITLE & BREADCRUMB PAGE-->
-<div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
-    <div class="page-header pull-left">
-        <div class="page-title">
-            Detalle de la Compra
-        </div>
-    </div>
-    <ol class="breadcrumb page-breadcrumb pull-right">
-        <li><i class="fa fa-home"></i>&nbsp;<a href="@Url.Action("Index","Home")">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-        <li class="hidden"><a href="#"></a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-        <li class="active">Principal</li>
-    </ol>
-    <div class="clearfix">
-    </div>
-</div>
+<!--BEGIN TITLE & BREADCRUMB PAGE--><!--BEGIN TITLE & BREADCRUMB PAGE-->
+<h1 class="page-header">Compras</h1>
+<ul class="breadcrumb">
+    <li><span class="glyphicon glyphicon-home">&nbsp;</span>Home</li>
+    <li><a href="#">Compras</a></li>
+</ul>
 <!--END TITLE & BREADCRUMB PAGE-->
+
+<hr />
+
 <!--BEGIN CONTENT-->
 <div class="page-content">
     <div id="tab-general">
-        <div class="col-md-12">
+        <div class="col-md-11">
             <div class="panel" style="color:#000">
-                <div class="panel-heading">
-                    <h3 class="text-center">Compra</h3>
-                </div>
                 <div class="panel-body">
                     <div>
-                        <hr />
                         <dl class="dl-horizontal">
                             <dt>
                                 @Html.DisplayName("Nombre Completo")
@@ -138,7 +128,7 @@
                         </dl>
                     </div>
                     <p>
-                        @Html.ActionLink("Volver", "Index", new { page = ViewBag.Page }, new { @Class = "btn btn-primary"})
+                        @Html.ActionLink("Volver", "Index", new { page = ViewBag.Page }, new { @Class = "btn btn-primary" })
                     </p>
                 </div>
             </div>

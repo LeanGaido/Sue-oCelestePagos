@@ -4,50 +4,25 @@
 }
 
 
-<!--BEGIN TITLE & BREADCRUMB PAGE-->
-<div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
-    <div class="page-header pull-left">
-        <div class="page-title">
-            DETALLE DE PAGOS DE LA COMPRA
-        </div>
-    </div>
-    <ol class="breadcrumb page-breadcrumb pull-right">
-        <li><i class="fa fa-home"></i>&nbsp;<a href="@Url.Action("Index","Home")">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-        <li class="hidden"><a href="#"></a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-        <li class="active">Principal</li>
-    </ol>
-    <div class="clearfix">
-    </div>
-</div>
+<!--BEGIN TITLE & BREADCRUMB PAGE--><!--BEGIN TITLE & BREADCRUMB PAGE-->
+<h1 class="page-header">Compras</h1>
+<ul class="breadcrumb">
+    <li><span class="glyphicon glyphicon-home">&nbsp;</span>Home</li>
+    <li><a href="#">Compras</a></li>
+</ul>
 <!--END TITLE & BREADCRUMB PAGE-->
 
-<br />
-@*<div id="title-breadcrumb-option-demo" class="page-title-breadcrumb" style="border-left:5px solid #e5e5e5;border-top:5px solid #e5e5e5;border-right:5px solid #e5e5e5">
-    <div class="col-md-8">
-        @using (Html.BeginForm())
-        {
-            <div class="col-md-6">
-                <input type="text" name="searchString" id="searchString" class="form-control" value="@ViewBag.CurrentFilter " />
-            </div>
-            <div class="col-md-2">
-                <input type="submit" value="Buscar" class="btn btn-primary" />
-            </div>
-        }
-    </div>
-    <div class="clearfix">
-    </div>
-</div>*@
+<hr />
 
 <!--BEGIN CONTENT-->
 <div class="page-content">
     <div id="tab-general">
         <div class="panel" style="color:#000">
-            <div class="panel-heading">
-                <h3 class="text-center">Compra</h3>
-            </div>
+            @*<div class="panel-heading">
+                    <h3 class="text-center">Compra</h3>
+                </div>*@
             <div class="panel-body">
                 <div>
-                    <hr />
                     <dl class="dl-horizontal">
                         <dt>
                             @Html.DisplayName("Nombre Completo")
@@ -213,17 +188,17 @@
                                 </tr>
                             }
                             @*<tfoot>
-                                @Html.ActionLink("Volver", "Index", new { page = ViewBag.Page }, new { @Class = "btn btn-primary" })
-                                <br />
-                            </tfoot>*@
+                                    @Html.ActionLink("Volver", "Index", new { page = ViewBag.Page }, new { @Class = "btn btn-primary" })
+                                    <br />
+                                </tfoot>*@
                         </table>
 
                         @*<div class="text-center">
-                            Pagina @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+                                Pagina @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
 
-                            @Html.PagedListPager(Model, page => Url.Action("Index",
-                                new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
-                        </div>*@
+                                @Html.PagedListPager(Model, page => Url.Action("Index",
+                                    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+                            </div>*@
                     }
                     else
                     {
@@ -244,24 +219,24 @@
         </div>
 
         @*<div class="panel">
-            <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-md-4">
-                        <label>Nombre: </label>
-                        <input readonly value="@ViewBag.Cliente.NombreCompleto" class="form-control" />
-                    </div>
-                    <div class="col-md-4">
-                        <label>Nro Carton: </label>
-                        <input readonly value="@ViewBag.NumeroCarton" class="form-control" />
-                    </div>
-                    <div class="col-md-4">
-                        <label>Fecha de la Compra: </label>
-                        <input readonly value="@ViewBag.FechaVenta" class="form-control" />
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <label>Nombre: </label>
+                            <input readonly value="@ViewBag.Cliente.NombreCompleto" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>Nro Carton: </label>
+                            <input readonly value="@ViewBag.NumeroCarton" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label>Fecha de la Compra: </label>
+                            <input readonly value="@ViewBag.FechaVenta" class="form-control" />
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>*@
-        
+            </div>*@
+
     </div>
 </div>
 <!--END CONTENT-->
