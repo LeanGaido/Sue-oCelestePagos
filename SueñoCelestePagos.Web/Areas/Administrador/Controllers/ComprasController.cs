@@ -73,6 +73,7 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
             return View(resumenAcumulado.ToPagedList(page, 15));
         }
 
+        [AllowAnonymous]
         public FileContentResult DescargarResumenAcumulado(int? Año, int InstitucionesID = 0)
         {
             List<CartonVendido> CartonesVendido = new List<CartonVendido>();
