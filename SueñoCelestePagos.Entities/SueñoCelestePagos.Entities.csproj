@@ -46,6 +46,7 @@
     <Compile Include="Adhesion.cs" />
     <Compile Include="AporteInstitucion.cs" />
     <Compile Include="Application.cs" />
+    <Compile Include="Campaña.cs" />
     <Compile Include="CartonReservado.cs" />
     <Compile Include="CodigoTelefono.cs" />
     <Compile Include="CompradoresSinCuenta.cs" />
@@ -76,7 +77,9 @@
     <Compile Include="Pago360\Response\SolicitudDebitoResponse.cs" />
     <Compile Include="SolicitudDebito.cs" />
     <Compile Include="TipoDePago.cs" />
+    <Compile Include="VMs\MesCampañaVm.cs" />
     <Compile Include="VMs\ResumenAcumuladoVm.cs" />
+    <Compile Include="VMs\ResumenCampañaVm.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

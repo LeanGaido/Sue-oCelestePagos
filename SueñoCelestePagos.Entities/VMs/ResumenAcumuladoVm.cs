@@ -16,6 +16,8 @@ namespace SueñoCelestePagos.Entities.VMs
 
         public string Telefono { get; set; }
 
+        public string Email { get; set; }
+
         public string Localidad { get; set; }
 
         public string Institucion { get; set; }

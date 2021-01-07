@@ -16,6 +16,7 @@ namespace SueñoCelestePagos.Dal
         public DbSet<Adhesion> Adhesiones { get; set; }
         public DbSet<AporteInstitucion> AporteInstitucion { get; set; }
         public DbSet<Application> applications { get; set; }
+        public DbSet<Campaña> Campañas { get; set; }
         public DbSet<Carton> Cartones { get; set; }
         public DbSet<CartonReservado> CartonesReservados { get; set; }
         public DbSet<CartonVendido> CartonesVendidos { get; set; }
