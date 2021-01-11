@@ -10,6 +10,10 @@ namespace SueñoCelestePagos.Entities.VMs
     {
         public int Mes { get; set; }
 
+        public int Año { get; set; }
+
+        public string NombreMes { get; set; }
+
         public decimal Importe { get; set; }
     }
 }

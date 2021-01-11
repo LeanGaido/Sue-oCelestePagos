@@ -52,39 +52,63 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
 
         /*****************************************************************************************/
 
-        public ActionResult ResumenAcumulado(int? Año, int InstitucionesID = 0, int page = 1)
+        public ActionResult ResumenAcumulado(int? Campaña, int InstitucionesID = 0, int page = 1)
         {
-            if (Año == null)
-            {
-                Año = DateTime.Today.Year;
-            }
-
             var Instituciones = db.Instituciones.ToList();
 
             Instituciones.Insert(0, new Institucion() { ID = 0, Nombre = "" });
 
             ViewBag.InstitucionesID = new SelectList(Instituciones, "ID", "Nombre", InstitucionesID);
 
-            ViewBag.Año = Año;
+            var Campañas = db.Campañas.ToList();
+
+            if(Campaña == null)
+            {
+                Campaña = Campañas.First().ID;
+                ViewBag.Campaña = new SelectList(Campañas, "ID", "Año", Campaña);
+            }
+            else
+            {
+                ViewBag.Campaña = new SelectList(Campañas, "ID", "Año");
+            }
+
+            ViewBag.CampañaID = Campaña;
             ViewBag.InstitucionID = InstitucionesID;
 
-            List<ResumenAcumuladoVm> resumenAcumulado = ObtenerResumenAcumulado(Año, InstitucionesID);
+            //List<ResumenAcumuladoVm> resumenAcumulado = ObtenerResumenAcumulado(Año, InstitucionesID);
 
-            return View(resumenAcumulado.ToPagedList(page, 15));
+            List<ResumenCampañaVm> resumenCampañaVm = ObtenerResumenAcumuladoV2(Campaña.Value, InstitucionesID);
+
+            return View(resumenCampañaVm.ToPagedList(page, 15));
         }
 
         [AllowAnonymous]
-        public FileContentResult DescargarResumenAcumulado(int? Año, int InstitucionesID = 0)
+        public FileContentResult DescargarResumenAcumulado(int? Campaña, int InstitucionesID = 0)
         {
             List<CartonVendido> CartonesVendido = new List<CartonVendido>();
 
-            List<ResumenAcumuladoVm> resumenAcumulado = ObtenerResumenAcumulado(Año, InstitucionesID);
+            //<ResumenAcumuladoVm> resumenAcumulado = ObtenerResumenAcumulado(Año, InstitucionesID);
+            var Campañas = db.Campañas.Where(x => x.ID == Campaña).FirstOrDefault();
+
+            List<ResumenCampañaVm> resumenCampañaVm = ObtenerResumenAcumuladoV2(Campaña.Value, InstitucionesID);
+
+            var resumenCampañaParaExcel = (from oResumenCampañaVm in resumenCampañaVm
+                                           select new
+                                           {
+                                               Carton = oResumenCampañaVm.NroCarton,
+                                               Cliente = oResumenCampañaVm.NombreCompleto,
+                                               Dni = oResumenCampañaVm.Dni,
+                                               Telefono = oResumenCampañaVm.Telefono,
+                                               Email = oResumenCampañaVm.Email,
+                                               Localidad = oResumenCampañaVm.Localidad,
+                                               Institucion = oResumenCampañaVm.Institucion
+                                           }).ToList();
 
             ExcelMapper mapper = new ExcelMapper();
 
-            string newFile = Server.MapPath("~/Archivos/Exportacion/compras/compras" + Año + ".xlsx");
+            string newFile = Server.MapPath("~/Archivos/Exportacion/compras/compras" + Campañas.Año + ".xlsx");
 
-            mapper.Save(newFile, resumenAcumulado, "SheetName", true);
+            mapper.Save(newFile, resumenCampañaParaExcel, "SheetName", true);
 
             String mimeType = MimeMapping.GetMimeMapping(newFile);
 
@@ -199,10 +223,10 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
 
             return resumenAcumulado;
         }
-        private List<ResumenAcumuladoVm> ObtenerResumenAcumuladoV2(int CampañaId, int InstitucionesID)
+        private List<ResumenCampañaVm> ObtenerResumenAcumuladoV2(int CampañaId, int InstitucionesID)
         {
 
-            List<ResumenAcumuladoVm> resumenAcumulado = new List<ResumenAcumuladoVm>();
+            List<ResumenCampañaVm> resumenAcumulado = new List<ResumenCampañaVm>();
 
             var Campaña = db.Campañas.Where(x => x.ID == CampañaId).FirstOrDefault();
 
@@ -218,17 +242,19 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
                 CartonesVendido = CartonesVendido.Where(x => x.EntidadID == InstitucionesID).ToList();
             }
 
-            ResumenAcumuladoVm totalMensual = new ResumenAcumuladoVm();
-            totalMensual.Institucion = "Totales Mensuales";
+            ResumenCampañaVm totalesResumenAcumulado = new ResumenCampañaVm();
+            totalesResumenAcumulado.Institucion = "Totales";
+            List<MesCampañaVm> Totates = ObtenerListadoMeses(Campaña);
 
             foreach (var CartonVendido in CartonesVendido)
             {
+
                 var pagos = db.PagosCartonesVendidos.Where(x => x.CartonVendidoID == CartonVendido.ID && x.Pagado == true)
                                                     .ToList();
 
                 if (pagos.Count >= 1)
                 {
-                    ResumenAcumuladoVm nuevoResumenAcumulado = new ResumenAcumuladoVm();
+                    ResumenCampañaVm nuevoResumenAcumulado = new ResumenCampañaVm();
 
                     nuevoResumenAcumulado.NroCarton = CartonVendido.Carton.Numero;
                     nuevoResumenAcumulado.NombreCompleto = CartonVendido.Cliente.NombreCompleto;
@@ -240,73 +266,102 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
                     var institucion = db.Instituciones.Where(x => x.ID == CartonVendido.EntidadID).FirstOrDefault();
                     nuevoResumenAcumulado.Institucion = (institucion == null) ? "" : institucion.Nombre;
 
+                    List<MesCampañaVm> PagosCampañaVm = ObtenerListadoMeses(Campaña);
+
                     foreach (var pago in pagos)
                     {
-                        switch (pago.FechaDePago.Month)
-                        {
-                            case 1:
-                                nuevoResumenAcumulado.PagoEnero += pago.Pago;
-                                totalMensual.PagoEnero += pago.Pago;
-                                break;
-                            case 2:
-                                nuevoResumenAcumulado.PagoFebrero += pago.Pago;
-                                totalMensual.PagoFebrero += pago.Pago;
-                                break;
-                            case 3:
-                                nuevoResumenAcumulado.PagoMarzo += pago.Pago;
-                                totalMensual.PagoMarzo += pago.Pago;
-                                break;
-                            case 4:
-                                nuevoResumenAcumulado.PagoAbril += pago.Pago;
-                                totalMensual.PagoAbril += pago.Pago;
-                                break;
-                            case 5:
-                                nuevoResumenAcumulado.PagoMayo += pago.Pago;
-                                totalMensual.PagoMayo += pago.Pago;
-                                break;
-                            case 6:
-                                nuevoResumenAcumulado.PagoJunio += pago.Pago;
-                                totalMensual.PagoJunio += pago.Pago;
-                                break;
-                            case 7:
-                                nuevoResumenAcumulado.PagoJulio += pago.Pago;
-                                totalMensual.PagoJulio += pago.Pago;
-                                break;
-                            case 8:
-                                nuevoResumenAcumulado.PagoAgosto += pago.Pago;
-                                totalMensual.PagoAgosto += pago.Pago;
-                                break;
-                            case 9:
-                                nuevoResumenAcumulado.PagoSeptiembre += pago.Pago;
-                                totalMensual.PagoSeptiembre += pago.Pago;
-                                break;
-                            case 10:
-                                nuevoResumenAcumulado.PagoOctubre += pago.Pago;
-                                totalMensual.PagoOctubre += pago.Pago;
-                                break;
-                            case 11:
-                                nuevoResumenAcumulado.PagoNoviembre += pago.Pago;
-                                totalMensual.PagoNoviembre += pago.Pago;
-                                break;
-                            case 12:
-                                nuevoResumenAcumulado.PagoDiciembre += pago.Pago;
-                                totalMensual.PagoDiciembre += pago.Pago;
-                                break;
-                        }
+                        var pagoCampaña = PagosCampañaVm.Where(x => x.Mes == pago.FechaDePago.Month && x.Año == pago.FechaDePago.Year).FirstOrDefault();
 
-                        nuevoResumenAcumulado.TotalPagos += pago.Pago;
+                        pagoCampaña.Importe = pago.Pago;
+                        
+                        var totalMes = Totates.Where(x => x.Mes == pago.FechaDePago.Month && x.Año == pago.FechaDePago.Year).FirstOrDefault();
+                        totalMes.Importe += pago.Pago;
                     }
 
-                    resumenAcumulado.Add(nuevoResumenAcumulado);
+                    nuevoResumenAcumulado.MesesCampaña = PagosCampañaVm;
 
-                    totalMensual.TotalPagos += nuevoResumenAcumulado.TotalPagos;
+                    resumenAcumulado.Add(nuevoResumenAcumulado);
                 }
 
             }
 
-            resumenAcumulado.Add(totalMensual);
+            totalesResumenAcumulado.MesesCampaña = Totates;
+
+            resumenAcumulado.Add(totalesResumenAcumulado);
 
             return resumenAcumulado;
+        }
+
+        private static List<MesCampañaVm> ObtenerListadoMeses(Campaña Campaña)
+        {
+            List<MesCampañaVm> mesesCampañaVm = new List<MesCampañaVm>();
+
+            //int CantMeses = ((Campaña.FechaFin.Year - Campaña.FechaInicio.Year) * 12) + Campaña.FechaFin.Month - Campaña.FechaInicio.Month;
+
+            var FechaInicio = new DateTime(Campaña.FechaInicio.Year, Campaña.FechaInicio.Month, 1);
+
+            var Meses = Campaña.FechaFin.Subtract(FechaInicio).Days / (365.25 / 12);
+            var CantMeses = Math.Round(Meses);
+            int mesInicial = Campaña.FechaInicio.Month;
+            int añoInicial = Campaña.FechaInicio.Year;
+
+            for (int Mes = 0; Mes <= CantMeses; Mes++)
+            {
+                string nombreMes = "";
+                switch (mesInicial)
+                {
+                    case 1:
+                        nombreMes = "Enero";
+                        break;
+                    case 2:
+                        nombreMes = "Febrero";
+                        break;
+                    case 3:
+                        nombreMes = "Marzo";
+                        break;
+                    case 4:
+                        nombreMes = "Abril";
+                        break;
+                    case 5:
+                        nombreMes = "Mayo";
+                        break;
+                    case 6:
+                        nombreMes = "Junio";
+                        break;
+                    case 7:
+                        nombreMes = "Julio";
+                        break;
+                    case 8:
+                        nombreMes = "Agosto";
+                        break;
+                    case 9:
+                        nombreMes = "Septiembre";
+                        break;
+                    case 10:
+                        nombreMes = "Octubre";
+                        break;
+                    case 11:
+                        nombreMes = "Noviembre";
+                        break;
+                    case 12:
+                        nombreMes = "Diciembre";
+                        break;
+                }
+
+                mesesCampañaVm.Add(new MesCampañaVm() { Mes = mesInicial, Año = añoInicial, NombreMes = nombreMes, Importe = 0 });
+
+                if(mesInicial == 12)
+                {
+                    mesInicial = 1;
+                    añoInicial++;
+                }
+                else
+                {
+                    mesInicial++;
+                }
+            }
+
+            return mesesCampañaVm;
         }
 
         /*****************************************************************************************/

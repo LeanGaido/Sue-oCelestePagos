@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<SueñoCelestePagos.Entities.VMs.ResumenAcumuladoVm>
+﻿@model IEnumerable<SueñoCelestePagos.Entities.VMs.ResumenCampañaVm>
 @using PagedList.Mvc;
 @{
     ViewBag.Title = "Resumen Acumulado";
@@ -21,19 +21,7 @@
         @using (Html.BeginForm())
         {
             <div class="col-md-4">
-                <select name="Año" id="Año" class="form-control">
-                    @for (int año = 2019; año <= Hoy.Year + 1; año++)
-                    {
-                        if (ViewBag.Año == año)
-                        {
-                            <option selected value="@año">@año</option>
-                        }
-                        else
-                        {
-                            <option value="@año">@año</option>
-                        }
-                    }
-                </select>
+                @Html.DropDownList("Campaña", null, new { @Class = "form-control" })
             </div>
             <div class="col-md-6">
                 @Html.DropDownList("InstitucionesID", null, new { @Class = "form-control" })
@@ -44,7 +32,7 @@
         }
     </div>
     <div class="col-md-4">
-        <a class="btn btn-primary" href="@Url.Action("DescargarResumenAcumulado", "Compras", new { Año = ViewBag.Año, InstitucionesID = ViewBag.InstitucionID })" target="_blank">Exportar a Excel</a>
+        @*<a class="btn btn-primary" href="@Url.Action("DescargarResumenAcumulado", "Compras", new { Año = ViewBag.Año, InstitucionesID = ViewBag.InstitucionID, Campaña = ViewBag.CampañaID })" target="_blank">Exportar a Excel</a>*@
     </div>
     <div class="clearfix">
     </div>
@@ -55,7 +43,7 @@
 <!--BEGIN CONTENT-->
 <div class="page-content">
     <div id="tab-general">
-        @if (Model.Count > 0)
+        @if (Model.Count() > 0)
         {
             <table class="table table-bordered">
                 <thead>
@@ -81,45 +69,12 @@
                         <th>
                             Institucion
                         </th>
-                        <th>
-                            Enero
-                        </th>
-                        <th>
-                            Febrero
-                        </th>
-                        <th>
-                            Marzo
-                        </th>
-                        <th>
-                            Abril
-                        </th>
-                        <th>
-                            Mayo
-                        </th>
-                        <th>
-                            Junio
-                        </th>
-                        <th>
-                            Julio
-                        </th>
-                        <th>
-                            Agosto
-                        </th>
-                        <th>
-                            Septiembre
-                        </th>
-                        <th>
-                            Octubre
-                        </th>
-                        <th>
-                            Noviembre
-                        </th>
-                        <th>
-                            Diciembre
-                        </th>
-                        <th>
-                            Total
-                        </th>
+                        @foreach (var mes in Model.First().MesesCampaña)
+                        {
+                            <th>
+                                @mes.NombreMes
+                            </th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -147,45 +102,13 @@
                             <td>
                                 @compra.Institucion
                             </td>
-                            <td>
-                                $@compra.PagoEnero
-                            </td>
-                            <td>
-                                $@compra.PagoFebrero
-                            </td>
-                            <td>
-                                $@compra.PagoMarzo
-                            </td>
-                            <td>
-                                $@compra.PagoAbril
-                            </td>
-                            <td>
-                                $@compra.PagoMayo
-                            </td>
-                            <td>
-                                $@compra.PagoJunio
-                            </td>
-                            <td>
-                                $@compra.PagoJulio
-                            </td>
-                            <td>
-                                $@compra.PagoAgosto
-                            </td>
-                            <td>
-                                $@compra.PagoSeptiembre
-                            </td>
-                            <td>
-                                $@compra.PagoOctubre
-                            </td>
-                            <td>
-                                $@compra.PagoNoviembre
-                            </td>
-                            <td>
-                                $@compra.PagoDiciembre
-                            </td>
-                            <td>
-                                $@compra.TotalPagos
-                            </td>
+                            
+                            @foreach (var mes in compra.MesesCampaña)
+                            {
+                                <td>
+                                    @mes.Importe
+                                </td>
+                            }
                         </tr>
                     }
                 </tbody>
@@ -194,12 +117,12 @@
                 </tfoot>
             </table>
 
-            <div class="text-center">
+            @*<div class="text-center">
                 Pagina @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
 
                 @Html.PagedListPager(Model, page => Url.Action("Index",
                     new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
-            </div>
+            </div>*@
         }
         else
         {
