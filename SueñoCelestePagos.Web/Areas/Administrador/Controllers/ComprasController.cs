@@ -16,8 +16,12 @@ using SueñoCelestePagos.Entities.Pago360.Response;
 using System.Text;
 using SueñoCelestePagos.Web.Areas.Administrador.Models;
 using SueñoCelestePagos.Entities.Pago360;
-using Ganss.Excel;
 using SueñoCelestePagos.Entities.VMs;
+using SueñoCelestePagos.Utilities;
+using Excel = Microsoft.Office.Interop.Excel;
+using System.Dynamic;
+using System.Runtime.InteropServices;
+using Ganss.Excel;
 
 namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
 {
@@ -87,34 +91,162 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
         {
             List<CartonVendido> CartonesVendido = new List<CartonVendido>();
 
-            //<ResumenAcumuladoVm> resumenAcumulado = ObtenerResumenAcumulado(Año, InstitucionesID);
             var Campañas = db.Campañas.Where(x => x.ID == Campaña).FirstOrDefault();
 
             List<ResumenCampañaVm> resumenCampañaVm = ObtenerResumenAcumuladoV2(Campaña.Value, InstitucionesID);
 
-            var resumenCampañaParaExcel = (from oResumenCampañaVm in resumenCampañaVm
-                                           select new
-                                           {
-                                               Carton = oResumenCampañaVm.NroCarton,
-                                               Cliente = oResumenCampañaVm.NombreCompleto,
-                                               Dni = oResumenCampañaVm.Dni,
-                                               Telefono = oResumenCampañaVm.Telefono,
-                                               Email = oResumenCampañaVm.Email,
-                                               Localidad = oResumenCampañaVm.Localidad,
-                                               Institucion = oResumenCampañaVm.Institucion
-                                           }).ToList();
+            IList<Dictionary<string, string>> resumenAcumulado = new List<Dictionary<string, string>>();
 
-            ExcelMapper mapper = new ExcelMapper();
+            #region Encabezado
+            var encabezadoResumenCampaña = new Dictionary<string, string>(){
+                {"Carton", "Carton"},
+                {"Cliente", "Cliente"},
+                {"Dni", "Dni"},
+                {"Telefono", "Telefono"},
+                {"Email", "Email"},
+                {"Localidad", "Localidad"},
+                {"Institucion", "Institucion"}
+            };
 
-            string newFile = Server.MapPath("~/Archivos/Exportacion/compras/compras" + Campañas.Año + ".xlsx");
+            foreach (var mes in resumenCampañaVm.First().MesesCampaña)
+            {
+                encabezadoResumenCampaña.Add(mes.NombreMes + "/" + mes.Año, mes.NombreMes + "/" + mes.Año);
+            }
 
-            mapper.Save(newFile, resumenCampañaParaExcel, "SheetName", true);
+            resumenAcumulado.Add(encabezadoResumenCampaña);
+            #endregion
 
+            #region Detalle
+            foreach (var item in resumenCampañaVm)
+            {
+                if (item.NroCarton == null)
+                {
+                    continue;
+                }
+                var detalleResumenCampaña = new Dictionary<string, string>(){
+                    {"Carton", item.NroCarton},
+                    {"Cliente", item.NombreCompleto},
+                    {"Dni", item.Dni},
+                    {"Telefono", item.Telefono},
+                    {"Email", item.Email},
+                    {"Localidad", item.Localidad},
+                    {"Institucion", item.Institucion}
+                };
+                foreach (var mes in item.MesesCampaña)
+                {
+                    detalleResumenCampaña.Add(mes.NombreMes + "/" + mes.Año, "$" + mes.Importe.ToString());
+                }
+
+                resumenAcumulado.Add(detalleResumenCampaña);
+            }
+            #endregion
+
+            #region Totales
+            var totalesResumenCampaña = new Dictionary<string, string>(){
+                {"Carton", ""},
+                {"Cliente", ""},
+                {"Dni", ""},
+                {"Telefono", ""},
+                {"Email", ""},
+                {"Localidad", ""},
+                {"Institucion", "Totales"}
+            };
+
+            foreach (var item in resumenCampañaVm)
+            {
+                if (item.NroCarton == null)
+                {
+                    continue;
+                }
+                foreach (var mes in item.MesesCampaña)
+                {
+                    if(totalesResumenCampaña.ContainsKey(mes.NombreMes + "/" + mes.Año))
+                    {
+                        var importe = decimal.Parse(totalesResumenCampaña[mes.NombreMes + "/" + mes.Año].Remove(0,1));
+
+                        importe += mes.Importe;
+
+                        totalesResumenCampaña[mes.NombreMes + "/" + mes.Año] = "$" + importe.ToString();
+                    }
+                    else
+                    {
+                        totalesResumenCampaña[mes.NombreMes + "/" + mes.Año] = "$" + mes.Importe.ToString();
+                    }
+                }
+            }
+
+            resumenAcumulado.Add(totalesResumenCampaña);
+            #endregion
+
+            #region Exportacion a Excel
+            Excel.Application xlApp = new Excel.Application();
+
+            if (xlApp == null)
+            {
+                //Excel is not properly installed
+                return null;
+            }
+
+            Excel.Workbook xlWorkBook;
+            Excel.Worksheet xlWorkSheet;
+            object misValue = System.Reflection.Missing.Value;
+
+            xlWorkBook = xlApp.Workbooks.Add(misValue);
+            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+            int fila = 1;//"fila" es la fila del excel en la estaria escribiendo y la inicializo en 1
+            for (int indice = 0; indice < resumenAcumulado.Count; indice++)//"indice" seria la posicion del List<Dictionary<string,string>> que estoy iterando
+            {
+                int columna = 1;//"columna" es la columna del excel en la estaria escribiendo y la inicializo en 1
+                var value = resumenAcumulado[indice];
+                foreach (string NombrePropiedad in value.Keys)
+                {
+                    //"NombrePropiedad" es el nombre que se le asigno como Key al Dictionary<string,string> al momento de crearlo
+                    var valor = value[NombrePropiedad];//de esta forma obtengo el Value del Dictionary<string,string>
+
+                    //Escriobo en la fila y en la columna actual del excel el valor que obtuve
+                    xlWorkSheet.Cells[fila, columna] = valor;
+
+                    columna++;//Avanzo a la sig Columna
+                }
+
+                fila++;//Avanzo a la sig fila
+            }
+
+            string newFile = Server.MapPath("~/Archivos/Exportacion/compras/compras" + Campañas.Año + ".xls");
+
+            try
+            {
+                //Si ya existe un documento con el nombre asignado, se le cambia el nombre al ya existente
+                if (System.IO.File.Exists(newFile))
+                {
+                    var hoy = DateTime.Now;
+                    string destinationOldFile = Server.MapPath("~/Archivos/Exportacion/compras/compras" + Campañas.Año + "-" + hoy.Hour + hoy.Minute + hoy.Second + "-" + hoy.Day + hoy.Month + hoy.Year + ".xls");
+                    System.IO.File.Move(newFile, destinationOldFile);
+                }
+            }
+            catch (Exception iox)
+            {
+                //Tratar Errores
+                throw;
+            }
+
+            xlWorkBook.SaveAs(newFile, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+            xlWorkBook.Close(true, misValue, misValue);
+            xlApp.Quit();
+
+            Marshal.ReleaseComObject(xlWorkSheet);
+            Marshal.ReleaseComObject(xlWorkBook);
+            Marshal.ReleaseComObject(xlApp);
+            #endregion
+
+            #region Descarga del Excel
             String mimeType = MimeMapping.GetMimeMapping(newFile);
 
             byte[] stream = System.IO.File.ReadAllBytes(newFile);
 
             return File(stream, mimeType);
+            #endregion
         }
 
         private List<ResumenAcumuladoVm> ObtenerResumenAcumulado(int? Año, int InstitucionesID)
@@ -235,6 +367,7 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
                                                                  x.Carton.ValidoHasta == Campaña.FechaFin)
                                                      .Include(x => x.Carton)
                                                      .Include(x => x.Cliente)
+                                                     .OrderBy(x => x.FechaVenta)
                                                      .ToList();
 
             if (InstitucionesID != 0)
@@ -1038,5 +1171,9 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
                 return cambioEstado;
             }
         }
+
+        /*****************************************************************************************/
+
+
     }
 }
