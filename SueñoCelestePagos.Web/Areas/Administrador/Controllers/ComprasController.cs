@@ -220,66 +220,6 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
                 }
                 workbook.SaveAs(newFile);
             }
-
-            //Excel.Application xlApp = new Excel.Application();
-
-            //if (xlApp == null)
-            //{
-            //    //Excel is not properly installed
-            //    return null;
-            //}
-
-            //Excel.Workbook xlWorkBook;
-            //Excel.Worksheet xlWorkSheet;
-            //object misValue = System.Reflection.Missing.Value;
-
-            //xlWorkBook = xlApp.Workbooks.Add(misValue);
-            //xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
-
-            //int fila = 1;//"fila" es la fila del excel en la estaria escribiendo y la inicializo en 1
-            //for (int indice = 0; indice < resumenAcumulado.Count; indice++)//"indice" seria la posicion del List<Dictionary<string,string>> que estoy iterando
-            //{
-            //    int columna = 1;//"columna" es la columna del excel en la estaria escribiendo y la inicializo en 1
-            //    var value = resumenAcumulado[indice];
-            //    foreach (string NombrePropiedad in value.Keys)
-            //    {
-            //        //"NombrePropiedad" es el nombre que se le asigno como Key al Dictionary<string,string> al momento de crearlo
-            //        var valor = value[NombrePropiedad];//de esta forma obtengo el Value del Dictionary<string,string>
-
-            //        //Escriobo en la fila y en la columna actual del excel el valor que obtuve
-            //        xlWorkSheet.Cells[fila, columna] = valor;
-
-            //        columna++;//Avanzo a la sig Columna
-            //    }
-
-            //    fila++;//Avanzo a la sig fila
-            //}
-
-            //string newFile = Server.MapPath("~/Archivos/Exportacion/compras/compras" + Campañas.Año + ".xls");
-
-            //try
-            //{
-            //    //Si ya existe un documento con el nombre asignado, se le cambia el nombre al ya existente
-            //    if (System.IO.File.Exists(newFile))
-            //    {
-            //        var hoy = DateTime.Now;
-            //        string destinationOldFile = Server.MapPath("~/Archivos/Exportacion/compras/compras" + Campañas.Año + "-" + hoy.Hour + hoy.Minute + hoy.Second + "-" + hoy.Day + hoy.Month + hoy.Year + ".xls");
-            //        System.IO.File.Move(newFile, destinationOldFile);
-            //    }
-            //}
-            //catch (Exception iox)
-            //{
-            //    //Tratar Errores
-            //    throw;
-            //}
-
-            //xlWorkBook.SaveAs(newFile, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
-            //xlWorkBook.Close(true, misValue, misValue);
-            //xlApp.Quit();
-
-            //Marshal.ReleaseComObject(xlWorkSheet);
-            //Marshal.ReleaseComObject(xlWorkBook);
-            //Marshal.ReleaseComObject(xlApp);
             #endregion
 
             #region Descarga del Excel
