@@ -394,10 +394,10 @@ namespace SueñoCelestePagos.Web.Controllers
                         FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
                     }
 
-                    //if (hoy.Day > FechaDeVencimiento.PrimerVencimiento.Day)
-                    //{
-                    //    FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == (hoy.Month + 1) && x.Año == hoy.Year).FirstOrDefault();
-                    //}
+                    if (hoy.Day > FechaDeVencimiento.PrimerVencimiento.Day)
+                    {
+                        FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == (hoy.Month + 1) && x.Año == hoy.Year).FirstOrDefault();
+                    }
 
                     var numeroCarton = db.Cartones.Where(x => x.ID == cartonReservado.CartonID).FirstOrDefault();
 
