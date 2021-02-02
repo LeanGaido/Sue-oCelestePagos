@@ -47,7 +47,16 @@
                         <dd>
                             @ViewBag.Cliente.Celular
                         </dd>
+                        @if (!string.IsNullOrEmpty(ViewBag.Cliente.Email))
+                        {
+                            <dt>
+                                @Html.DisplayName("Email")
+                            </dt>
 
+                            <dd>
+                                @ViewBag.Cliente.Email
+                            </dd>
+                        }
                         <dt>
                             @Html.DisplayName("Domicilio")
                         </dt>
