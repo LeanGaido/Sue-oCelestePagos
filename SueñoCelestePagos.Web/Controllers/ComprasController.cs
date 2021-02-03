@@ -400,8 +400,9 @@ namespace SueñoCelestePagos.Web.Controllers
                     }
 
                     var numeroCarton = db.Cartones.Where(x => x.ID == cartonReservado.CartonID).FirstOrDefault();
+                    var entidad = db.Instituciones.Find(cartonVendido.EntidadID);
 
-                    pago360.description = "Pago Total del Carton Nro°: " + numeroCarton.Numero;
+                    pago360.description = "Pago Total del Carton Nro°: " + numeroCarton.Numero + " - " + entidad.Nombre;
                     pago360.first_due_date = FechaDeVencimiento.PrimerVencimiento.ToString("dd-MM-yyyy");
                     pago360.first_total = Carton.Precio;
                     pago360.second_due_date = FechaDeVencimiento.SegundoVencimiento.ToString("dd-MM-yyyy");
@@ -809,7 +810,9 @@ namespace SueñoCelestePagos.Web.Controllers
                 //    FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == (hoy.Month + 1) && x.Año == hoy.Year).FirstOrDefault();
                 //}
 
-                pago360.description = "Pago Cuota Nro: " + CuotaCarton.NroCuota + " del Carton Nro°: " + CartonComprado.Carton.Numero;
+                var entidad = db.Instituciones.Find(CartonComprado.EntidadID);
+
+                pago360.description = "Pago Cuota Nro: " + CuotaCarton.NroCuota + " del Carton Nro°: " + CartonComprado.Carton.Numero + " - " + entidad.Nombre;
 
                 pago360.first_due_date = CuotaCarton.PrimerVencimiento.ToString("dd-MM-yyyy");
                 pago360.first_total = CuotaCarton.PrimerPrecioCuota;
