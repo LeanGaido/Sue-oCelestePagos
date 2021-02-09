@@ -17,6 +17,7 @@ using System.Web.Mvc;
 using System.Data.Entity;
 using Newtonsoft.Json.Linq;
 using SueñoCelestePagos.Entities.Pago360;
+using SueñoCelestePagos.Utilities;
 
 namespace SueñoCelestePagos.Web.Controllers
 {
@@ -143,7 +144,7 @@ namespace SueñoCelestePagos.Web.Controllers
         public ActionResult ElegirCarton(int? SearchType, string SearchString)
         {
             DateTime hoy = DateTime.Now;
-            if(Session["ClienteDni"] == null || string.IsNullOrEmpty(Session["ClienteDni"].ToString()))
+            if (Session["ClienteDni"] == null || string.IsNullOrEmpty(Session["ClienteDni"].ToString()))
             {
                 return RedirectToAction("Identificarse", "Clientes", new { returnUrl = "/Compras/ElegirCarton" });
             }
@@ -160,7 +161,7 @@ namespace SueñoCelestePagos.Web.Controllers
 
             string area = telefono.Substring(0, telefono.IndexOf('-'));
             string numero = telefono.Substring(telefono.IndexOf('-') + 1);
-            
+
             var reservado = db.CartonesReservados.Where(x => x.Dni == dni && x.Sexo == sexo && x.FechaReserva < hoy && x.FechaExpiracionReserva > hoy).FirstOrDefault();
 
             if (reservado != null)
@@ -207,14 +208,14 @@ namespace SueñoCelestePagos.Web.Controllers
 
             var reservado = db.CartonesReservados.Where(x => x.CartonID == NumeroCarton && x.FechaReserva < hoy && x.FechaExpiracionReserva > hoy).FirstOrDefault();
 
-            if(reservado != null)
+            if (reservado != null)
             {
                 ViewBag.MensajeError = "El Carton esta Reservado o Comprado";
 
                 return RedirectToAction("ElegirCarton", new { MensajeError = "El Carton esta Reservado o Comprado" });
             }
 
-            CartonReservado cartonReservado = db.CartonesReservados.Where(x => x.Dni == dni && x.Sexo == sexo ).FirstOrDefault();
+            CartonReservado cartonReservado = db.CartonesReservados.Where(x => x.Dni == dni && x.Sexo == sexo).FirstOrDefault();
 
             if (cartonReservado == null) cartonReservado = new CartonReservado();
 
@@ -250,7 +251,7 @@ namespace SueñoCelestePagos.Web.Controllers
                 DateTime hoy = DateTime.Now;
 
                 var Cliente = ObtenerCliente();
-                if(Cliente == null)
+                if (Cliente == null)
                 {
                     Cliente = new Cliente();
 
@@ -287,14 +288,14 @@ namespace SueñoCelestePagos.Web.Controllers
 
             int CartonReservadoId = 0;
 
-            if (!int.TryParse(Session["ReservaCarton"].ToString(),out CartonReservadoId))
+            if (!int.TryParse(Session["ReservaCarton"].ToString(), out CartonReservadoId))
             {
                 return RedirectToAction("ErrorCompra", new { MensajeError = "Ocurrio un Error, Por Favor intente mas tarde" });
             }
 
             var cartonReservado = db.CartonesReservados.Where(x => x.ID == CartonReservadoId).FirstOrDefault();
 
-            if(cartonReservado == null || cartonReservado.FechaExpiracionReserva <= DateTime.Now)
+            if (cartonReservado == null || cartonReservado.FechaExpiracionReserva <= DateTime.Now)
             {
                 return RedirectToAction("ErrorCompra", new { MensajeError = "La Reserva del Carton Expiro" });
             }
@@ -344,7 +345,7 @@ namespace SueñoCelestePagos.Web.Controllers
 
             var cartonReservado = db.CartonesReservados.Where(x => x.ID == CartonReservadoId && x.Dni == Cliente.Dni).Include("Carton").FirstOrDefault();
 
-            if(cartonReservado == null)
+            if (cartonReservado == null)
             {
                 return RedirectToAction("ErrorCompra", new { MensajeError = "Ocurrio un Error, Por Favor intente mas tarde" });
             }
@@ -353,6 +354,7 @@ namespace SueñoCelestePagos.Web.Controllers
             {
                 return RedirectToAction("ErrorCompra", new { MensajeError = "La Reserva del Carton Expiro" });
             }
+
             try
             {
                 var Carton = db.Cartones.Where(x => x.ID == cartonReservado.CartonID).FirstOrDefault();
@@ -370,6 +372,26 @@ namespace SueñoCelestePagos.Web.Controllers
                 db.SaveChanges();
 
                 CartonVendidoId = cartonVendido.ID;
+
+                #region Envio de Correo
+                try
+                {
+                    string from = "no-reply@xn--sueocelestepago-0qb.com";
+                    string usuario = "no-reply@xn--sueocelestepago-0qb.com";
+                    string password = "GVbE3UMeME";
+
+                    string subject = "Sueño Celeste la Gran Promocion";
+
+                    string emailBody = ObtenerBodyEmailCompraPagoContado(Carton.Numero);
+
+                    Email nuevoEmail = new Email();
+                    nuevoEmail.SendEmail(emailBody, from, usuario, password, Cliente.Email, subject);
+                }
+                catch (Exception)
+                {
+
+                }
+                #endregion
 
                 if (cartonVendido.TipoDePagoID == 1)
                 {
@@ -471,7 +493,7 @@ namespace SueñoCelestePagos.Web.Controllers
 
                     for (int cuota = 1; cuota <= CantCuotas; cuota++)
                     {
-                        if(MesCuota == 13)
+                        if (MesCuota == 13)
                         {
                             MesCuota = 1;
                         }
@@ -573,7 +595,7 @@ namespace SueñoCelestePagos.Web.Controllers
             AdhesionPago360Request adhesionPago360 = new AdhesionPago360Request();
 
             var CartonComprado = db.CartonesVendidos.Where(x => x.ClienteID == Cliente.ID && x.FechaVenta.Year == hoy.Year && x.PagoCancelado == false).FirstOrDefault();
-            
+
             var ReservaCarton = db.CartonesReservados.Where(x => x.ID == CartonReservadoId).FirstOrDefault();
 
             db.CartonesReservados.Remove(ReservaCarton);
@@ -593,11 +615,11 @@ namespace SueñoCelestePagos.Web.Controllers
             db.Adhesiones.Add(adhesion);
 
             db.SaveChanges();
-            
+
             int c = 1, mesInicio = hoy.Month;
             float precioCuota = CartonComprado.Carton.Precio / CantCuotas;
-            
-            if(hoy.Day >= 7)
+
+            if (hoy.Day >= 7)
             {
                 mesInicio++;
             }
@@ -625,7 +647,7 @@ namespace SueñoCelestePagos.Web.Controllers
 
             return RedirectToAction("DebitoPendiente");
         }
-        
+
         public ActionResult CancelarAdhesion()
         {
             //if (Session["ClienteDni"] == null)
@@ -655,7 +677,7 @@ namespace SueñoCelestePagos.Web.Controllers
 
             Adhesion adhesion360 = CancelarAdhesion360(adhesion.id);
 
-            if(adhesion360.state == "canceled")
+            if (adhesion360.state == "canceled")
             {
                 switch (Respuesta)
                 {
@@ -888,7 +910,7 @@ namespace SueñoCelestePagos.Web.Controllers
             Uri uri = new Uri("http://localhost:90/api/Payment360?paymentRequest=" + HttpUtility.UrlEncode(pago360Js));
 
             HttpWebRequest requestFile = (HttpWebRequest)WebRequest.Create(uri);
-            
+
             requestFile.ContentType = "application/html";
             requestFile.Headers.Add("authorization", "Bearer OTllZDJlZjA3NmNlOWQ4NzYzYzYzNjljMjU3YTNmZGYxNTQ3MGIwZGI2MjIwNjc2MDJkYjNmNmRiNWUyNTcxOA");
 
@@ -1342,7 +1364,7 @@ namespace SueñoCelestePagos.Web.Controllers
 
         #region Webhook
         [System.Web.Http.HttpPost]
-        public HttpResponseMessage WebhookListener([System.Web.Http.FromBody]Webhook pWebhook)
+        public HttpResponseMessage WebhookListener([System.Web.Http.FromBody] Webhook pWebhook)
         {
             if (CambiarEstado(pWebhook))
             {
@@ -1369,14 +1391,14 @@ namespace SueñoCelestePagos.Web.Controllers
                         int pagoID = int.Parse(pago.external_reference);
 
                         var pagoCarton = db.PagosCartonesVendidos.Where(x => x.ID == pagoID).FirstOrDefault();
-                        
+
                         if (pwebhook.type == "paid")
                         {
                             pagoCarton.Pagado = true;
                             pagoCarton.FechaDePago = DateTime.Now;
                             pagoCarton.Pago = pago.first_total;
 
-                            if(pagoCarton.CuotaPlanID != 0)
+                            if (pagoCarton.CuotaPlanID != 0)
                             {
                                 var CuotaPlan = db.CuotasPlanDePagos.Where(x => x.ID == pagoCarton.CuotaPlanID).FirstOrDefault();
 
@@ -1389,10 +1411,34 @@ namespace SueñoCelestePagos.Web.Controllers
 
                         CartonComprado.Pagos += pago.first_total;
 
-                        if(Decimal.Parse(CartonComprado.Carton.Precio.ToString()) - 1 <= CartonComprado.Pagos)
+                        if (Decimal.Parse(CartonComprado.Carton.Precio.ToString()) - 1 <= CartonComprado.Pagos)
                         {
                             CartonComprado.PagoRealizdo = true;
                             CartonComprado.FechaPago = DateTime.Now;
+
+                            var Carton = db.Cartones.Where(x => x.ID == CartonComprado.CartonID).FirstOrDefault();
+                            var Cliente = db.Clientes.Where(x => x.ID == CartonComprado.ClienteID).FirstOrDefault();
+
+                            string from = "no-reply@xn--sueocelestepago-0qb.com";
+                            string usuario = "no-reply@xn--sueocelestepago-0qb.com";
+                            string password = "GVbE3UMeME";
+
+                            string subject = "Sueño Celeste la Gran Promocion";
+
+                            string emailBody = "";
+
+                            //Enviar Correo pago Completado
+                            if (CartonComprado.TipoDePagoID == 1)
+                            {
+                                emailBody = ObtenerBodyEmailCompraPagoContado(Carton.Numero);
+                            }
+                            else if (CartonComprado.TipoDePagoID == 2)
+                            {
+                                emailBody = ObtenerBodyEmailCompraPagoCuotas(Carton.Numero);
+                            }
+
+                            Email nuevoEmail = new Email();
+                            nuevoEmail.SendEmail(emailBody, from, usuario, password, Cliente.Email, subject);
                         }
 
                         db.SaveChanges();
@@ -1426,7 +1472,7 @@ namespace SueñoCelestePagos.Web.Controllers
 
                         var cuotaDebito = db.CuotasDebito.Where(x => x.ID == debito.CuotaDebitoId).FirstOrDefault();
 
-                        if(pwebhook.type == "paid")
+                        if (pwebhook.type == "paid")
                         {
                             cuotaDebito.CuotaPagada = true;
                             cuotaDebito.FechaPago = DateTime.Now;
@@ -1436,7 +1482,7 @@ namespace SueñoCelestePagos.Web.Controllers
 
                         var cuotasImpagas = db.CuotasDebito.Where(x => x.CartonVendidoID == cuotaDebito.CartonVendidoID && x.CuotaPagada == false).ToList();
 
-                        if(cuotasImpagas.Count < 1)
+                        if (cuotasImpagas.Count < 1)
                         {
                             var cartonDebito = db.CartonesVendidos.Where(x => x.ID == cuotaDebito.CartonVendidoID).FirstOrDefault();
 
@@ -1482,6 +1528,33 @@ namespace SueñoCelestePagos.Web.Controllers
             {
                 return null;
             }
+        }
+
+        public string ObtenerBodyEmailCompraPagoContado(string NroCarton)
+        {
+            string body = "<meta charset='utf-8'><style type='text/css'> @media only screen and (max-width: 480px) { table { display: block !important; width: 100% !important; } td { width: 480px !important; } }</style><body style='font-family: 'Malgun Gothic', Arial, sans-serif; margin: 0; padding: 0; width: 100%; -webkit-text-size-adjust: none; -webkit-font-smoothing: antialiased;'> <table width='100%' bgcolor='#FFFFFF' border='0' cellspacing='0' cellpadding='0' id='background' style='height: 100% !important; margin: 0; padding: 0; width: 100% !important;'> <tr> <td align='center' valign='top'> <table width='600' border='0' bgcolor='#FFFFFF' cellspacing='0' cellpadding='0' id='header_container'> <tr> <td align='center' valign='top'> <table width='100%' border='0' bgcolor='#474544' cellspacing='0' cellpadding='0' id='header'> <tr> <td valign='top' class='header_content'> <h1 style='color: #F4F4F4; font-size: 24px; text-align: center;'> </h1> </td> </tr> </table> <!-- // END #header --> </td> </tr> </table> <!-- // END #header_container --> <table width='600' border='0' bgcolor='#26abff' cellspacing='0' cellpadding='20' id='preheader'> <tr> <td valign='top'> <table width='100%' border='0' cellspacing='0' cellpadding='0'> <tr> <td valign='top' width='600'> <div class='logo' style='text-align: center;'> <a href='javascript:void(0)'> <img src='https://www.xn--sueoceleste-3db.com/assets/images/logo.png'> </a> </div> </td> </tr> </table> </td> </tr> </table> <!-- // END #preheader --> <table width='600' border='0' bgcolor='#FFFFFF' cellspacing='0' cellpadding='0' id='header_container'> <tr> <td align='center' valign='top'> <table width='100%' border='0' bgcolor='#474544' cellspacing='0' cellpadding='0' id='header'> <tr> <td valign='top' class='header_content'> <h1 style='color: #F4F4F4; font-size: 24px; text-align: center;'> </h1> </td> </tr> </table> <!-- // END #header --> </td> </tr> </table> <!-- // END #header_container --> <table width='600' border='0' bgcolor='#f2f2f2' cellspacing='0' cellpadding='20' id='body_container'> <tr> <td align='center' valign='top' class='body_content'> <table width='100%' border='0' cellspacing='0' cellpadding='20'> <tr> <td valign='top'> <h2 style='font-size: 28px; text-align: justify;'>Notificación por Compra de Cartón de Sueño Celeste</h2> <p style='font-size: 16px; line-height: 22px; text-align: justify;'> Este aviso automático es para confirmar que la compra del cartón Número [NumeroCarton] se ha realizado con éxito. <br><br> En breve, le estaremos enviando el cartón impreso a su domicilio. <br><br> Muchas gracias por su compra. <br><br> Atentamente <br><br> <b>Sueño Celeste</b> </p> </td> </tr> </table> </td> </tr> </table> <!-- // END #body_container --> <table width='600' border='0' bgcolor='#26abff' cellspacing='0' cellpadding='20' id='contact_container'> <tr> <td align='center' valign='top'> <table width='100%' border='0' cellspacing='0' cellpadding='20' id='contact'> <tr> <td> <p style='color: #F4F4F4; font-size: 14px; line-height: 22px; text-align: center;'> San Martín 295, Morteros, Córdoba, Argentina <br> sceleste_mutual9@hotmail.com <br> +54 (3562) 404455 </p> </td> </tr> </table> <!-- // END #contact --> </td> </tr> </table> <!-- // END #contact_container --> </td> </tr> </table> <!-- // END #background --></body>";
+
+            body = body.Replace("[NumeroCarton]", NroCarton);
+
+            return body;
+        }
+
+        public string ObtenerBodyEmailCompraPagoCuotas(string NroCarton)
+        {
+            string body = "<meta charset='utf-8'><style type='text/css'> @media only screen and (max-width: 480px) { table { display: block !important; width: 100% !important; } td { width: 480px !important; } }</style><body style='font-family: 'Malgun Gothic', Arial, sans-serif; margin: 0; padding: 0; width: 100%; -webkit-text-size-adjust: none; -webkit-font-smoothing: antialiased;'> <table width='100%' bgcolor='#FFFFFF' border='0' cellspacing='0' cellpadding='0' id='background' style='height: 100% !important; margin: 0; padding: 0; width: 100% !important;'> <tr> <td align='center' valign='top'> <table width='600' border='0' bgcolor='#FFFFFF' cellspacing='0' cellpadding='0' id='header_container'> <tr> <td align='center' valign='top'> <table width='100%' border='0' bgcolor='#474544' cellspacing='0' cellpadding='0' id='header'> <tr> <td valign='top' class='header_content'> <h1 style='color: #F4F4F4; font-size: 24px; text-align: center;'> </h1> </td> </tr> </table> <!-- // END #header --> </td> </tr> </table> <!-- // END #header_container --> <table width='600' border='0' bgcolor='#26abff' cellspacing='0' cellpadding='20' id='preheader'> <tr> <td valign='top'> <table width='100%' border='0' cellspacing='0' cellpadding='0'> <tr> <td valign='top' width='600'> <div class='logo' style='text-align: center;'> <a href='javascript:void(0)'> <img src='https://www.xn--sueoceleste-3db.com/assets/images/logo.png'> </a> </div> </td> </tr> </table> </td> </tr> </table> <!-- // END #preheader --> <table width='600' border='0' bgcolor='#FFFFFF' cellspacing='0' cellpadding='0' id='header_container'> <tr> <td align='center' valign='top'> <table width='100%' border='0' bgcolor='#474544' cellspacing='0' cellpadding='0' id='header'> <tr> <td valign='top' class='header_content'> <h1 style='color: #F4F4F4; font-size: 24px; text-align: center;'> </h1> </td> </tr> </table> <!-- // END #header --> </td> </tr> </table> <!-- // END #header_container --> <table width='600' border='0' bgcolor='#f2f2f2' cellspacing='0' cellpadding='20' id='body_container'> <tr> <td align='center' valign='top' class='body_content'> <table width='100%' border='0' cellspacing='0' cellpadding='20'> <tr> <td valign='top'> <h2 style='font-size: 24px; text-align: justify;'>Notificación de Pago en Cuotas Finalizado</h2> <p style='font-size: 16px; line-height: 22px; text-align: justify;'> Este aviso automático es para informar que se ha completado el plan de pago en cuotas por la compra del cartón Número [NumeroCarton] de Sueño Celeste. <br><br> En breve, le estaremos enviando el cartón impreso a su domicilio. <br><br> Muchas gracias. <br><br> Atentamente <br><br> <b>Sueño Celeste</b> </p> </td> </tr> </table> </td> </tr> </table> <!-- // END #body_container --> <table width='600' border='0' bgcolor='#26abff' cellspacing='0' cellpadding='20' id='contact_container'> <tr> <td align='center' valign='top'> <table width='100%' border='0' cellspacing='0' cellpadding='20' id='contact'> <tr> <td> <p style='color: #F4F4F4; font-size: 14px; line-height: 22px; text-align: center;'> San Martín 295, Morteros, Córdoba, Argentina <br> sceleste_mutual9@hotmail.com <br> +54 (3562) 404455 </p> </td> </tr> </table> <!-- // END #contact --> </td> </tr> </table> <!-- // END #contact_container --> </td> </tr> </table> <!-- // END #background --></body>";
+
+            body = body.Replace("[NumeroCarton]", NroCarton);
+
+            return body;
+        }
+
+        public string ObtenerBodyEmailCompraPagoPendiente(string NroCarton)
+        {
+            string body = "<meta charset='utf-8'><style type='text/css'> @media only screen and (max-width: 480px) { table { display: block !important; width: 100% !important; } td { width: 480px !important; } }</style><body style='font-family: 'Malgun Gothic', Arial, sans-serif; margin: 0; padding: 0; width: 100%; -webkit-text-size-adjust: none; -webkit-font-smoothing: antialiased;'> <table width='100%' bgcolor='#FFFFFF' border='0' cellspacing='0' cellpadding='0' id='background' style='height: 100% !important; margin: 0; padding: 0; width: 100% !important;'> <tr> <td align='center' valign='top'> <table width='600' border='0' bgcolor='#FFFFFF' cellspacing='0' cellpadding='0' id='header_container'> <tr> <td align='center' valign='top'> <table width='100%' border='0' bgcolor='#474544' cellspacing='0' cellpadding='0' id='header'> <tr> <td valign='top' class='header_content'> <h1 style='color: #F4F4F4; font-size: 24px; text-align: center;'> </h1> </td> </tr> </table> </td> </tr> </table> <table width='600' border='0' bgcolor='#26abff' cellspacing='0' cellpadding='20' id='preheader'> <tr> <td valign='top'> <table width='100%' border='0' cellspacing='0' cellpadding='0'> <tr> <td valign='top' width='600'> <div class='logo' style='text-align: center;'> <a href='javascript:void(0)'> <img src='https://www.xn--sueoceleste-3db.com/assets/images/logo.png'> </a> </div> </td> </tr> </table> </td> </tr> </table> <table width='600' border='0' bgcolor='#FFFFFF' cellspacing='0' cellpadding='0' id='header_container'> <tr> <td align='center' valign='top'> <table width='100%' border='0' bgcolor='#474544' cellspacing='0' cellpadding='0' id='header'> <tr> <td valign='top' class='header_content'> <h1 style='color: #F4F4F4; font-size: 24px; text-align: center;'> </h1> </td> </tr> </table> </td> </tr> </table> <table width='600' border='0' bgcolor='#f2f2f2' cellspacing='0' cellpadding='20' id='body_container'> <tr> <td align='center' valign='top' class='body_content'> <table width='100%' border='0' cellspacing='0' cellpadding='20'> <tr> <td valign='top'> <h2 style='font-size: 24px; text-align: justify;'>Notificación de Aviso de Deuda de Pago</h2> <p style='font-size: 16px; line-height: 22px; text-align: justify;'> Este aviso automático es para informar que se existe una deuda de pago por la compra del cartón Número [NumeroCarton] de Sueño Celeste. <br><br> Por favor, realice el pago correspondiente en breve, a fin de que se haga efectiva la compra de su cartón. <br><br> Muchas gracias. <br><br> Atentamente <br><br> <b>Sueño Celeste</b> </p> </td> </tr> </table> </td> </tr> </table> <table width='600' border='0' bgcolor='#26abff' cellspacing='0' cellpadding='20' id='contact_container'> <tr> <td align='center' valign='top'> <table width='100%' border='0' cellspacing='0' cellpadding='20' id='contact'> <tr> <td> <p style='color: #F4F4F4; font-size: 14px; line-height: 22px; text-align: center;'> San Martín 295, Morteros, Córdoba, Argentina <br> sceleste_mutual9@hotmail.com <br> +54 (3562) 404455 </p> </td> </tr> </table> </td> </tr> </table> </td> </tr> </table></body>";
+
+            body = body.Replace("[NumeroCarton]", NroCarton);
+
+            return body;
         }
 
         /***************************************************************************************/
@@ -1594,7 +1667,7 @@ namespace SueñoCelestePagos.Web.Controllers
                 c++;
             }
 
-            #region
+            #region old
             //int CantCuotasPosibles = 12;
             //int c = 1;
 
@@ -1779,6 +1852,27 @@ namespace SueñoCelestePagos.Web.Controllers
                 return Json(reserva, JsonRequestBehavior.AllowGet);
             }
 
+        }
+
+        public void ProbarEnvioCorreo(string email)
+        {
+            try
+            {
+                string from = "no-reply@xn--sueocelestepago-0qb.com";
+                string usuario = "no-reply@xn--sueocelestepago-0qb.com";
+                string password = "GVbE3UMeME";
+
+                string subject = "Sueño Celeste la Gran Promocion";
+
+                string emailBody = ObtenerBodyEmailCompraPagoContado("777");
+
+                Email nuevoEmail = new Email();
+                nuevoEmail.SendEmail(emailBody, from, usuario, password, email, subject);
+            }
+            catch (Exception)
+            {
+
+            }
         }
     }
 }
