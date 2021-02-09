@@ -802,7 +802,7 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
             string emailBody = ObtenerBodyEmailCompraCancelada(Compra.Carton.Numero);
 
             Email nuevoEmail = new Email();
-            nuevoEmail.SendEmail(emailBody, from, usuario, password, Compra.Cliente.Email, subject);
+            nuevoEmail.SendEmail(emailBody, Compra.Cliente.Email, subject);
 
             return RedirectToAction("VentasACancelar");
         }
@@ -869,7 +869,7 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
                     string emailBody = ObtenerBodyEmailCompraCancelada(compra.Carton.Numero);
 
                     Email nuevoEmail = new Email();
-                    nuevoEmail.SendEmail(emailBody, from, usuario, password, compra.Cliente.Email, subject);
+                    nuevoEmail.SendEmail(emailBody, compra.Cliente.Email, subject);
                 }
             }
 
@@ -1132,7 +1132,7 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
                             }
 
                             Email nuevoEmail = new Email();
-                            nuevoEmail.SendEmail(emailBody, from, usuario, password, Cliente.Email, subject);
+                            nuevoEmail.SendEmail(emailBody, Cliente.Email, subject);
                         }
 
                         db.SaveChanges();

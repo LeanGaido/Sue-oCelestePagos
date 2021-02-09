@@ -1,58 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Helpers;
 
 namespace SueñoCelestePagos.Utilities
 {
-
     public class Email
     {
-        private string smtpServer;
-        private int smtpPort;
-        private bool smtpCredentials;
-        private bool enableSsl;
+        private MailMessage mail;
+        private SmtpClient SmtpServer;
+        private MailAddress From;
+        private NetworkCredential cuenta;
+        private int puerto;
+        private bool autenticacion;
 
         public Email()
         {
-            smtpServer = "mail.mcbrill.com.ar";
-            smtpPort = 587/*465*/;
-            smtpCredentials = true;
-            enableSsl = false/*true*/;
+            mail = new MailMessage();
+            SmtpServer = new SmtpClient("mail.mcbrill.com.ar");
+            From = new MailAddress("no-reply@xn--sueocelestepago-0qb.com", "Avisos Sueño Celeste", Encoding.Default);
+            cuenta = new NetworkCredential("no-reply@xn--sueocelestepago-0qb.com", "GVbE3UMeME");
+            puerto = 587;
+            autenticacion = false;
         }
 
-        public Email(string _stmpServer, int _smtpPort, bool _smtpCredentials, bool _enableSsl)
+        public Email(MailMessage _mail, SmtpClient _SmtpServer, MailAddress _From, NetworkCredential _cuenta, int _puerto, bool _autenticacion)
         {
-            smtpServer = _stmpServer;
-            smtpPort = _smtpPort;
-            smtpCredentials = _smtpCredentials;
-            enableSsl = _enableSsl;
+            mail = _mail;
+            SmtpServer = _SmtpServer;
+            From = _From;
+            cuenta = _cuenta;
+            puerto = _puerto;
+            autenticacion = _autenticacion;
         }
 
-        public string SendEmail(string emailBody, string from, string user, string password, string To, string subject)
+        public string SendEmail(string emailBody, string To, string subject)
         {
             try
             {
-                //Configuring webMail class to send emails  
-                //gmail smtp server  
-                WebMail.SmtpServer = smtpServer;
-                //gmail port to send emails  
-                WebMail.SmtpPort = smtpPort;
-                WebMail.SmtpUseDefaultCredentials = smtpCredentials;
-                //sending emails with secure protocol  
-                WebMail.EnableSsl = enableSsl;
-                //EmailId used to send emails from application  
-                WebMail.UserName = user;
-                WebMail.Password = password;
+                mail.From = From;
+                mail.IsBodyHtml = true;
 
-                //Sender email address.  
-                WebMail.From = from;
+                mail.Subject = subject;
+                mail.Body = emailBody;
+                mail.To.Add(To);
 
-                //Send email  
-                WebMail.Send(to: To, subject: subject, body: emailBody, isBodyHtml: true);
+                SmtpServer.Port = puerto;
+                SmtpServer.EnableSsl = autenticacion;
+                SmtpServer.Credentials = cuenta;
 
+                SmtpServer.Send(mail);
                 return "Enviado Correctamente";
             }
             catch (Exception e)

@@ -385,7 +385,7 @@ namespace SueñoCelestePagos.Web.Controllers
                     string emailBody = ObtenerBodyEmailCompraPagoContado(Carton.Numero);
 
                     Email nuevoEmail = new Email();
-                    nuevoEmail.SendEmail(emailBody, from, usuario, password, Cliente.Email, subject);
+                    nuevoEmail.SendEmail(emailBody, Cliente.Email, subject);
                 }
                 catch (Exception)
                 {
@@ -1438,7 +1438,7 @@ namespace SueñoCelestePagos.Web.Controllers
                             }
 
                             Email nuevoEmail = new Email();
-                            nuevoEmail.SendEmail(emailBody, from, usuario, password, Cliente.Email, subject);
+                            nuevoEmail.SendEmail(emailBody, Cliente.Email, subject);
                         }
 
                         db.SaveChanges();
@@ -1867,7 +1867,7 @@ namespace SueñoCelestePagos.Web.Controllers
                 string emailBody = ObtenerBodyEmailCompraPagoContado("777");
 
                 Email nuevoEmail = new Email();
-                nuevoEmail.SendEmail(emailBody, from, usuario, password, email, subject);
+                nuevoEmail.SendEmail(emailBody, email, subject);
             }
             catch (Exception)
             {
