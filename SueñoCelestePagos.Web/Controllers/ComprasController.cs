@@ -834,7 +834,9 @@ namespace SueñoCelestePagos.Web.Controllers
 
                 var entidad = db.Instituciones.Find(CartonComprado.EntidadID);
 
-                pago360.description = "Pago Cuota Nro: " + CuotaCarton.NroCuota + " del Carton Nro°: " + CartonComprado.Carton.Numero + " - " + entidad.Nombre;
+                var Carton = db.Cartones.Where(x => x.ID == CartonComprado.CartonID).FirstOrDefault();
+
+                pago360.description = "Pago Cuota Nro: " + CuotaCarton.NroCuota + " del Carton Nro°: " + Carton.Numero + " - " + entidad.Nombre;
 
                 pago360.first_due_date = CuotaCarton.PrimerVencimiento.ToString("dd-MM-yyyy");
                 pago360.first_total = CuotaCarton.PrimerPrecioCuota;
