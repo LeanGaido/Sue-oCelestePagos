@@ -51,7 +51,7 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
                                              .OrderByDescending(x => x.FechaVenta)
                                              .ToList();
 
-            return View(Compras.ToPagedList(page,15));
+            return View(Compras);
         }
 
         /*****************************************************************************************/
