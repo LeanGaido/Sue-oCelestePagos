@@ -327,7 +327,7 @@ namespace SueñoCelestePagos.Web.Controllers
             Pago pago = new Pago();
 
             DateTime hoy = DateTime.Now;
-            string url = "https://www.sueñocelestepago.com.ar/Compras";
+            string url = "https://www.sueñocelestepago.com.ar/";
 
             var Cliente = ObtenerCliente();
 
@@ -432,9 +432,9 @@ namespace SueñoCelestePagos.Web.Controllers
                     pago360.payer_name = Cliente.NombreCompleto;
                     pago360.external_reference = pagoCarton.ID.ToString();//cartonVendido.ID.ToString();
                     pago360.payer_email = Cliente.Email;
-                    pago360.back_url_success = url + "/PagoRealizado";
-                    pago360.back_url_pending = url + "/PagoPendiente";
-                    pago360.back_url_rejected = url + "/PagoCancelado";
+                    pago360.back_url_success = url;// + "/PagoRealizado";
+                    pago360.back_url_pending = url;// + "/PagoPendiente";
+                    pago360.back_url_rejected = url;// + "/PagoCancelado";
                     //pago360.excluded_channels = new string[] { "credit_card" };
                     try
                     {
@@ -821,7 +821,7 @@ namespace SueñoCelestePagos.Web.Controllers
                 db.PagosCartonesVendidos.Add(pagoCarton);
                 db.SaveChanges();
 
-                string url = "https://www.sueñoceletepago.com.ar/Compras";
+                string url = "https://www.sueñoceletepago.com.ar/";
 
                 Pago360Request pago360 = new Pago360Request();
 
@@ -847,9 +847,9 @@ namespace SueñoCelestePagos.Web.Controllers
                 pago360.payer_name = Cliente.NombreCompleto;
                 pago360.external_reference = pagoCarton.ID.ToString();
                 pago360.payer_email = Cliente.Email;
-                pago360.back_url_success = url + "/PagoRealizado";
-                pago360.back_url_pending = url + "/PagoPendiente";
-                pago360.back_url_rejected = url + "/PagoCancelado";
+                pago360.back_url_success = url;// + "/PagoRealizado";
+                pago360.back_url_pending = url;// + "/PagoPendiente";
+                pago360.back_url_rejected = url;// + "/PagoCancelado";
                 //pago360.excluded_channels = new string[] { "credit_card" };
 
                 try
