@@ -1717,9 +1717,21 @@ namespace SueñoCelestePagos.Web.Controllers
 
         public JsonResult ObtenerInstituciones()
         {
-            List<Cuotas> cuotas = new List<Cuotas>();
+            var cliente = ObtenerCliente();
 
-            var Instituciones = db.Instituciones.ToList();
+            List<Cuotas> cuotas = new List<Cuotas>();
+            List<Institucion> Instituciones = new List<Institucion>();
+
+            if(cliente != null)
+            {
+                Instituciones.AddRange(db.Instituciones.Where(x => x.LocalidadID == cliente.LocalidadID).ToList());
+
+                Instituciones.AddRange(db.Instituciones.Where(x => x.LocalidadID != cliente.LocalidadID).ToList());
+            }
+            else
+            {
+                Instituciones.AddRange(db.Instituciones.ToList());
+            }
 
             foreach (var Institucion in Instituciones)
             {
