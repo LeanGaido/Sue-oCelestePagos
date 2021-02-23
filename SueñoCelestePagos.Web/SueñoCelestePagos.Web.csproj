@@ -2520,6 +2520,7 @@
     <Content Include="Areas\Administrador\Views\Instituciones\Aporte.cshtml" />
     <Content Include="Areas\Administrador\Views\Compras\ResumenAcumulado.cshtml" />
     <Content Include="Areas\Administrador\Views\Compras\CancelarVentas.cshtml" />
+    <Content Include="Areas\Administrador\Views\Compras\EnvioCorreoAvisoDeuda.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\i18n\defaults-zh_TW.min.js" />
