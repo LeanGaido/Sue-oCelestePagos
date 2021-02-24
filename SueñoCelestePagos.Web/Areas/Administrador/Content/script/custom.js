@@ -2,6 +2,7 @@
     
     if ($('#ProgressBarAvisoDeuda').length) {
         let ComprasConDeuda = 0;
+        var AñoCartonesConDeuda = $('#AñoCartonesConDeuda').val();
         //ObtenerComprasConDeuda
         $.ajax({
             type: "POST",
@@ -10,6 +11,7 @@
             cache: false,
             url: '/Administrador/Compras/ObtenerComprasConDeuda',
             data: {
+                year: AñoCartonesConDeuda
             },
             dataType: 'json',
             success: function (Compras) {

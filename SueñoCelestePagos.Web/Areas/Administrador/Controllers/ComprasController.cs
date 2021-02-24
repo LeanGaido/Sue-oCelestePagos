@@ -1210,13 +1210,27 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
         //[HttpPost]
         public JsonResult EnvioAvisoDeuda(int id)
         {
+            string subject = "Sueño Celeste la Gran Promocion";
 
+            string emailBody = "";
+
+            var CartonVendido = db.CartonesVendidos.Where(x => x.ID == id).FirstOrDefault();
+
+            var Carton = db.Cartones.Where(x => x.ID == CartonVendido.CartonID).FirstOrDefault();
+
+            var Cliente = db.Clientes.Where(x => x.ID == CartonVendido.ClienteID).FirstOrDefault();
+
+            emailBody = ObtenerBodyEmailPagoPendiente(Carton.Numero);
+            
+            Email nuevoEmail = new Email();
+
+            //nuevoEmail.SendEmail(emailBody, Cliente.Email, subject);
 
             return Json(id);
         }
 
         //[HttpPost]
-        public JsonResult ObtenerComprasConDeuda()
+        public JsonResult ObtenerComprasConDeuda(int year)
         {
             int Año = DateTime.Today.Year;
             DateTime hoy = DateTime.Today;
@@ -1224,7 +1238,8 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
             var Pagos = db.PagosCartonesVendidos.ToList();
 
             var Compras = db.CartonesVendidos.Where(x => x.PagoCancelado == false &&
-                                                         x.PagoRealizdo == false)
+                                                         x.PagoRealizdo == false &&
+                                                         x.Carton.Año == year)
                                              .ToList();
 
             Compras = Compras.Where(x => !Pagos.Any(y => y.CartonVendidoID == x.ID) ||
