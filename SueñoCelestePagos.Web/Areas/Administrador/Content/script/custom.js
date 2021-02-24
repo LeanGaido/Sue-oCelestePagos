@@ -4,35 +4,49 @@
         let ComprasConDeuda = 0;
         //ObtenerComprasConDeuda
         $.ajax({
-            type: "GET",
+            type: "POST",
             traditional: true,
             async: false,
             cache: false,
-            url: '/ContentAdmin/Compras/ObtenerComprasConDeuda',
+            url: '/Administrador/Compras/ObtenerComprasConDeuda',
             data: {
             },
             dataType: 'json',
             success: function (Compras) {
-                ComprasConDeuda = data.length;
-                $.each(Compras, function (i, data) {
+                ComprasConDeuda = Compras.length;
+                $("#NroTotalCorreos").text(ComprasConDeuda);
+                var time = 5000;
+                $.each(Compras, function (i, item) {
+                    //for (var i = 0; i < ComprasConDeuda; i++) {
                     setTimeout(function () {
                         $.ajax({
-                            type: "GET",
+                            type: "POST",
                             traditional: true,
                             async: false,
                             cache: false,
-                            url: '/ContentAdmin/Compras/EnvioAvisoDeuda',
+                            url: '/Administrador/Compras/EnvioAvisoDeuda',
                             data: {
-                                id : data.ID
+                                id: item.ID
                             },
                             dataType: 'json',
                             success: function (data) {
-                                
+                                var porcentaje = ((i + 1) / ComprasConDeuda) * 100;
+                                $('.progress-bar').width(porcentaje + '%');
+                                $("#NroCorreo").text(i + 1);
+                                    
+                                if (i == Compras.length - 1) {
+                                    $("#tituloEnvioCorreos").text("Correos Enviado Correctamente");
+                                    tituloEnvioCorreos
+                                    //alert("last");
+                                }
                             },
                             error: function (ex) {
+                                    
                             }
                         });
-                    }, 3000);
+                    }, time)
+                    time += 5000;
+                    //}
                 });
             },
             error: function (ex) {
@@ -40,7 +54,7 @@
         });
     }
 
-    moveProgressBar();
+    //moveProgressBar();
     // on browser resize...
     $(window).resize(function () {
         moveProgressBar();

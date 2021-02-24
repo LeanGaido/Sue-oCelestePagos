@@ -3,10 +3,56 @@
     ViewBag.Title = "EnvioCorreoAvisoDeuda";
 }
 
-<h2>Enviando Correos de Aviso de Deuda</h2>
 
-<!-- Change the below data attribute to play -->
-<div class="progress-wrap progress" data-progress-percent="25">
-    <div id="ProgressBarAvisoDeuda" class="progress-bar progress"></div>
+<!--BEGIN TITLE & BREADCRUMB PAGE--><!--BEGIN TITLE & BREADCRUMB PAGE-->
+<h1 class="page-header">Correos de Aviso de Deuda</h1>
+<ul class="breadcrumb">
+    <li><span class="glyphicon glyphicon-home">&nbsp;</span>Home</li>
+    <li><a href="#">Correos de Aviso de Deuda</a></li>
+</ul>
+<!--END TITLE & BREADCRUMB PAGE-->
+
+<hr />
+
+<div>
+    <div class="col-md-8">
+        @*@using (Html.BeginForm())
+            {
+                <div class="col-md-4">
+
+                </div>
+                <div class="col-md-6">
+                    <input type="text" name="searchString" id="searchString" class="form-control" value="@ViewBag.CurrentFilter " />
+                </div>
+                <div class="col-md-2">
+                    <input type="submit" value="Buscar" class="btn btn-primary" />
+                </div>
+            }*@
+    </div>
+    <div class="col-md-4">
+        @*<a class="btn btn-primary" href="@Url.Action("ClientesConPagos")" target="_blank">Exportar a Excel(Clientes con pagos realizados)</a>*@
+    </div>
+    <div class="clearfix">
+    </div>
 </div>
 
+@*<hr />*@
+
+<!--BEGIN CONTENT-->
+<div class="page-content">
+    <div id="tab-general">
+
+        <div class="text-center">
+            <h2 id="tituloEnvioCorreos"> Enviando Correos <span id="NroCorreo">0</span> / <span id="NroTotalCorreos"></span></h2>
+        </div>
+
+        <hr />
+
+        <div id="ProgressBarAvisoDeuda" class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+
+        <hr />
+    </div>
+</div>
+<!--END CONTENT-->

@@ -1207,15 +1207,15 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
             return View();
         }
 
-        [HttpPost]
+        //[HttpPost]
         public JsonResult EnvioAvisoDeuda(int id)
         {
 
 
-            return Json(null);
+            return Json(id);
         }
 
-        [HttpPost]
+        //[HttpPost]
         public JsonResult ObtenerComprasConDeuda()
         {
             int Año = DateTime.Today.Year;
