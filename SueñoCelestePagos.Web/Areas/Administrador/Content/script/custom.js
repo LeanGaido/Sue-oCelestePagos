@@ -17,7 +17,7 @@
             success: function (Compras) {
                 ComprasConDeuda = Compras.length;
                 $("#NroTotalCorreos").text(ComprasConDeuda);
-                var time = 5000;
+                var time = 32000;
                 $.each(Compras, function (i, item) {
                     //for (var i = 0; i < ComprasConDeuda; i++) {
                     setTimeout(function () {
@@ -47,7 +47,7 @@
                             }
                         });
                     }, time)
-                    time += 5000;
+                    time += 32000;
                     //}
                 });
             },
