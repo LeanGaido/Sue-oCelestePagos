@@ -43,6 +43,8 @@ namespace SueñoCelestePagos.Entities
 
         public bool PagoRealizdo { get; set; }
 
+        //public int AvisosDeuda { get; set; }
+
         public bool PagoCancelado { get; set; }
 
         public DateTime? FechaPago { get; set; }
