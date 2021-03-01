@@ -1204,6 +1204,12 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
 
         public ActionResult EnvioCorreoAvisoDeuda()
         {
+            var hoy = DateTime.Now;
+
+            var CampañaActual = db.Campañas.Where(x => x.FechaInicio <= hoy && x.FechaFin >= hoy).FirstOrDefault();
+
+            ViewBag.Año = CampañaActual.Año;
+
             return View();
         }
 
@@ -1232,9 +1238,6 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
         //[HttpPost]
         public JsonResult ObtenerComprasConDeuda(int year)
         {
-            int Año = DateTime.Today.Year;
-            DateTime hoy = DateTime.Today;
-
             var Pagos = db.PagosCartonesVendidos.ToList();
 
             var Compras = db.CartonesVendidos.Where(x => x.PagoCancelado == false &&
