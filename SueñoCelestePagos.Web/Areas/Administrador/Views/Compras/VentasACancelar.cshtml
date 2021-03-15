@@ -124,8 +124,8 @@
             <div class="text-center">
                 Pagina @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
 
-                @Html.PagedListPager(Model, page => Url.Action("Index",
-                    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+                @Html.PagedListPager(Model, page => Url.Action("VentasACancelar",
+                    new { page }))
             </div>
 
             <div class="panel">
