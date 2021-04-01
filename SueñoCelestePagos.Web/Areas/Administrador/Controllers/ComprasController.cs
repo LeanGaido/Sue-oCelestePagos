@@ -83,7 +83,7 @@ namespace SueñoCelestePagos.Web.Areas.Administrador.Controllers
 
             List<ResumenCampañaVm> resumenCampañaVm = ObtenerResumenAcumuladoV2(Campaña.Value, InstitucionesID);
 
-            return View(resumenCampañaVm.ToPagedList(page, 15));
+            return View(resumenCampañaVm);
         }
 
         [AllowAnonymous]
