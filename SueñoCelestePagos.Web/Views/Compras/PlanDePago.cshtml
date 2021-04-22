@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<SueñoCelestePagos.Entities.CuotasPlanDePago>
 @{
     ViewBag.Title = "Index";
+    decimal pagos = ViewBag.Pagos;
 }
 
 <div class="heading main centered">
@@ -28,30 +29,39 @@
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-md-10">
-                                    Cuota Nro° @cuota.NroCuota del cupon Nro° @cuota.CartonVendido.Carton.Numero: $@cuota.PrimerPrecioCuota
+                                    Cuota Nro° @cuota.NroCuota del cupon Nro° @cuota.CartonVendido.Carton.Numero: $@ViewBag.ValorCuota
                                 </div>
                                 <div class="col-md-2">
-                                    @if (cuota.PrimerVencimiento >= DateTime.Today)
+                                    @if (pagos >= Decimal.Parse(cuota.PrimerPrecioCuota.ToString()))
                                     {
-                                        if (cuota.CuotaPagada)
-                                        {
-                                            <a class="btn btn-success disabled">Pagado</a>
-                                        }
-                                        else
-                                        {
-                                            <a href="@Url.Action("PagarCuota", "Compras", new { cuota = cuota.ID })" class="btn btn-success">Pagar</a>
-                                        }
+                                        pagos = pagos - Decimal.Parse(cuota.PrimerPrecioCuota.ToString());
+                                        <a class="btn btn-success disabled">Pagado</a>
                                     }
                                     else
                                     {
-                                        @*if (Model.Last() == cuota)
+                                        if (cuota.PrimerVencimiento >= DateTime.Today)
                                         {
-                                            <a href="@Url.Action("PagarCuota", "Compras", new { cuota = cuota.ID })" class="btn btn-success">Pagar</a>
+                                            if (cuota.CuotaPagada)
+                                            {
+                                                <a class="btn btn-success disabled">Pagado</a>
+                                            }
+                                            else
+                                            {
+                                                <a href="@Url.Action("PagarCuota", "Compras", new { cuota = cuota.ID })" class="btn btn-success">Pagar</a>
+                                            }
                                         }
                                         else
-                                        {*@
-                                            <a class="btn btn-success disabled">Cuota Vencida</a>
-                                        //}
+                                        {
+                                            if (Model.Last() == cuota)
+                                            {
+                                                <a href="@Url.Action("PagarCuota", "Compras", new { cuota = cuota.ID })" class="btn btn-success">Pagar</a>
+                                            }
+                                            else
+                                            {
+                                                <a href="@Url.Action("PagarCuota", "Compras", new { cuota = cuota.ID })" class="btn btn-success">Pagar</a>
+                                                @*<a class="btn btn-success disabled">Cuota Vencida</a>*@
+                                            }
+                                        }
                                     }
                                 </div>
                             </div>

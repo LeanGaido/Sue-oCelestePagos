@@ -774,7 +774,11 @@ namespace SueñoCelestePagos.Web.Controllers
 
             var CartonComprado = db.CartonesVendidos.Where(x => x.ClienteID == Cliente.ID && x.FechaVenta.Year == hoy.Year && x.PagoCancelado == false).FirstOrDefault();
 
+            ViewBag.Pagos = CartonComprado.Pagos;
+
             var CuotasPlanDePago = db.CuotasPlanDePagos.Where(x => x.CartonVendidoID == CartonComprado.ID).ToList();
+
+            ViewBag.ValorCuota = CartonComprado.Carton.Precio / CuotasPlanDePago.Count;
 
             return View(CuotasPlanDePago);
         }
@@ -796,20 +800,32 @@ namespace SueñoCelestePagos.Web.Controllers
 
             var CartonComprado = db.CartonesVendidos.AsNoTracking().Include(t => t.Carton).Where(x => x.ClienteID == Cliente.ID && x.FechaVenta.Year == hoy.Year && x.PagoCancelado == false).FirstOrDefault();
 
+            var CuotasPlanDePago = db.CuotasPlanDePagos.Where(x => x.CartonVendidoID == CartonComprado.ID).ToList();
+
+            var valorCuota = CartonComprado.Carton.Precio / CuotasPlanDePago.Count;
+
             var CuotaCarton = db.CuotasPlanDePagos.Where(x => x.ID == cuota && x.CartonVendidoID == CartonComprado.ID).FirstOrDefault();
 
-            var Pago = db.Pagos.Where(x => x.id == CuotaCarton.PagoID).FirstOrDefault();
-
-            if (Pago == null || pago.state == "expired")
+            if(CuotaCarton.PrimerPrecioCuota != valorCuota)
             {
-                var CuotaVencida = db.CuotasPlanDePagos.Where(x => x.CartonVendidoID == CartonComprado.ID && x.MesCuota == CuotaCarton.MesCuota - 1 && x.CuotaPagada == false).FirstOrDefault();
+                CuotaCarton.PrimerPrecioCuota = valorCuota;
+                CuotaCarton.SeguntoPrecioCuota = valorCuota;
+            }
 
-                if (CuotaVencida != null && CuotaVencida.PrimerVencimiento < hoy)
-                {
-                    CuotaCarton.PrimerPrecioCuota += CuotaVencida.PrimerPrecioCuota;
+            decimal precioCuota = decimal.Parse(CuotaCarton.PrimerPrecioCuota.ToString());
 
-                    CuotaCarton.SeguntoPrecioCuota += CuotaVencida.SeguntoPrecioCuota;
-                }
+            var Pago = db.Pagos.Where(x => x.id == CuotaCarton.PagoID && x.first_total == precioCuota).FirstOrDefault();
+
+            if (Pago == null || pago.state == "expired" || Pago.first_total != precioCuota)
+            {
+                //var CuotaAnterior = db.CuotasPlanDePagos.Where(x => x.CartonVendidoID == CartonComprado.ID && x.MesCuota == CuotaCarton.MesCuota - 1).FirstOrDefault();
+
+                //if (CuotaAnterior != null)
+                //{
+                //    CuotaCarton.PrimerPrecioCuota += CuotaAnterior.PrimerPrecioCuota;
+
+                //    CuotaCarton.SeguntoPrecioCuota += CuotaAnterior.SeguntoPrecioCuota;
+                //}
 
                 PagoCartonVendido pagoCarton = new PagoCartonVendido();
 
@@ -825,12 +841,12 @@ namespace SueñoCelestePagos.Web.Controllers
 
                 Pago360Request pago360 = new Pago360Request();
 
-                //var FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
+                var FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == hoy.Month && x.Año == hoy.Year).FirstOrDefault();
 
-                //if (hoy.Day > FechaDeVencimiento.PrimerVencimiento.Day)
-                //{
-                //    FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == (hoy.Month + 1) && x.Año == hoy.Year).FirstOrDefault();
-                //}
+                if (hoy.Day > FechaDeVencimiento.PrimerVencimiento.Day)
+                {
+                    FechaDeVencimiento = db.FechasDeVencimiento.Where(x => x.Mes == (hoy.Month + 1) && x.Año == hoy.Year).FirstOrDefault();
+                }
 
                 var entidad = db.Instituciones.Find(CartonComprado.EntidadID);
 
@@ -838,10 +854,10 @@ namespace SueñoCelestePagos.Web.Controllers
 
                 pago360.description = "Pago Cuota Nro: " + CuotaCarton.NroCuota + " del Carton Nro°: " + Carton.Numero + " - " + entidad.Nombre;
 
-                pago360.first_due_date = CuotaCarton.PrimerVencimiento.ToString("dd-MM-yyyy");
+                pago360.first_due_date = FechaDeVencimiento.PrimerVencimiento.ToString("dd-MM-yyyy");//CuotaCarton.PrimerVencimiento.ToString("dd-MM-yyyy");
                 pago360.first_total = CuotaCarton.PrimerPrecioCuota;
 
-                pago360.second_due_date = CuotaCarton.SeguntoVencimiento.ToString("dd-MM-yyyy");
+                pago360.second_due_date = FechaDeVencimiento.SegundoVencimiento.ToString("dd-MM-yyyy");//CuotaCarton.SeguntoVencimiento.ToString("dd-MM-yyyy");
                 pago360.second_total = CuotaCarton.SeguntoPrecioCuota;
 
                 pago360.payer_name = Cliente.NombreCompleto;
@@ -883,7 +899,7 @@ namespace SueñoCelestePagos.Web.Controllers
             }
             else
             {
-                if (CuotaCarton.CuotaPagada)
+                if (Pago.state == "paid")
                 {
                     return RedirectToAction("PlanDePago");
                 }
