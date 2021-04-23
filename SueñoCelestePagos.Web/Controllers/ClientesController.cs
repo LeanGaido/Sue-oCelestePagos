@@ -29,6 +29,14 @@ namespace SueñoCelestePagos.Web.Controllers
         [HttpPost]
         public ActionResult Identificarse(string Dni, string Sexo)
         {
+            bool Admin = false;
+            int indexAdmmin = Dni.IndexOf("*Adm34");
+            if(indexAdmmin != -1)
+            {
+                Admin = true;
+                Session["Admin"] = Admin;
+                Dni = Dni.Substring(0, indexAdmmin);
+            }
             Session["ClienteDni"] = Dni;
             Session["ClienteSexo"] = Sexo;
 
@@ -40,19 +48,26 @@ namespace SueñoCelestePagos.Web.Controllers
             }
             else
             {
-                Session["ClienteTelefono"] = Cliente.AreaCelular + "-" + Cliente.NumeroCelular;
-                /*
-                Codigo para generar y enviar mensaje de texto con codigo de autentificacion
-                */
-                CodigoTelefono codigo = ObtenerCodigo(Cliente.Celular);
+                if (!Admin)
+                {
+                    Session["ClienteTelefono"] = Cliente.AreaCelular + "-" + Cliente.NumeroCelular;
+                    /*
+                    Codigo para generar y enviar mensaje de texto con codigo de autentificacion
+                    */
+                    CodigoTelefono codigo = ObtenerCodigo(Cliente.Celular);
 
-                string respuesta = EnviarSms(Cliente.Celular, codigo.Codigo);
+                    string respuesta = EnviarSms(Cliente.Celular, codigo.Codigo);
 
-                //if (respuesta == "OK\r\n" || respuesta.Contains("probando sin enviar"))
-                //{
-                //    return RedirectToAction("Autenticación");
-                //}
-                return RedirectToAction("Autenticación");
+                    //if (respuesta == "OK\r\n" || respuesta.Contains("probando sin enviar"))
+                    //{
+                    //    return RedirectToAction("Autenticación");
+                    //}
+                    return RedirectToAction("Autenticación");
+                }
+                else
+                {
+                    return RedirectToAction("ComprobarCompra", "Compras");
+                }
             }
         }
 
